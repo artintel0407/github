@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Structure Visualizer</title>
+    <title>Data Structure Learning Platform</title>
 
     <style>
         * {
@@ -14,91 +14,96 @@
 
         body {
             background-color: #f5f6f8;
-            color: #222;
             font-family: Arial, sans-serif;
+            color: #222;
 
             display: flex;
             justify-content: center;
             align-items: center;
 
             min-height: 100vh;
+
+            padding: 20px;
         }
 
         .container {
-            width: 900px;
+            width: 100%;
+            max-width: 1000px;
         }
 
         .title {
             text-align: center;
-            font-size: 48px;
+            font-size: 52px;
             font-weight: bold;
 
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .subtitle {
             text-align: center;
-            color: #9CA3AF;
+            color: #666;
 
-            margin-bottom: 50px;
+            font-size: 18px;
+
+            margin-bottom: 60px;
         }
 
         .grid {
             display: grid;
 
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
 
-            gap: 25px;
+            gap: 28px;
         }
 
         .card {
             background-color: white;
-            color: #222;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            border-radius: 20px;
 
-            padding: 30px;
+            border-radius: 24px;
+
+            padding: 36px 28px;
 
             text-decoration: none;
 
-           
+            color: #222;
+
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 
             transition: 0.2s;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
 
             background-color: #f9fafb;
         }
 
         .card-title {
-            font-size: 30px;
+            font-size: 32px;
 
             font-weight: bold;
 
-            margin-bottom: 10px;
+            margin-bottom: 16px;
         }
 
         .card-description {
-            color: #D1D5DB;
+            color: #666;
 
-            line-height: 1.6;
+            line-height: 1.7;
+
+            font-size: 16px;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                width: 90%;
-            }
-
+        @media (max-width: 900px) {
             .grid {
                 grid-template-columns: 1fr;
             }
 
             .title {
-                font-size: 36px;
+                font-size: 40px;
             }
         }
+
     </style>
 </head>
 
@@ -107,54 +112,40 @@
     <div class="container">
 
         <div class="title">
-            Data Structure Visualizer
+            Data Structure Learning Platform
         </div>
 
         <div class="subtitle">
-            Interactive visualization of fundamental data structures
+            Learn data structures through visualization, quizzes, and theory.
         </div>
 
         <div class="grid">
-
-            <a href="stack.html" class="card">
-                <div class="card-title">Stack</div>
+            <a href="theory.html" class="card">
+                <div class="card-title">Basic Theory</div>
 
                 <div class="card-description">
-                    Visualize push and pop operations using LIFO structure.
+                    Study core concepts and theoretical foundations of data structures.
+                </div>
+            </a>
+            
+            <a href="stl.html" class="card">
+                <div class="card-title">STL</div>
+
+                <div class="card-description">
+                    Explore interactive visualizations of fundamental data structures.
                 </div>
             </a>
 
-            <a href="queue.html" class="card">
-                <div class="card-title">Queue</div>
+            <a href="quiz.html" class="card">
+                <div class="card-title">Quiz</div>
 
                 <div class="card-description">
-                    Explore enqueue and dequeue operations using FIFO structure.
+                    Solve quizzes and test your understanding of data structures.
                 </div>
             </a>
 
-            <a href="array.html" class="card">
-                <div class="card-title">Array</div>
 
-                <div class="card-description">
-                    Access and modify indexed elements in a fixed-size array.
-                </div>
-            </a>
 
-            <a href="list.html" class="card">
-                <div class="card-title">Linked List</div>
-
-                <div class="card-description">
-                    Understand node connections and sequential traversal.
-                </div>
-            </a>
-
-            <a href="tree.html" class="card">
-                <div class="card-title">Tree</div>
-
-                <div class="card-description">
-                    Visualize hierarchical structures and traversal in a general tree.
-                </div>
-            </a>
         </div>
 
     </div>

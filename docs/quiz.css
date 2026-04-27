@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f5f6f8;
+    font-family: Arial, sans-serif;
+    color: #222;
+
+    display: flex;
+    justify-content: center;
+
+    padding: 40px 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+}
+
+.header {
+    margin-bottom: 24px;
+}
+
+.header h1 {
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    font-size: 18px;
+    color: #666;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.setup-group {
+    margin-bottom: 18px;
+}
+
+.setup-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.setup-group select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+button {
+    margin-top: 14px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #3182f6;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1b64da;
+}
+
+#questionText {
+    margin: 20px 0;
+    font-size: 24px;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-btn {
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #eef4ff;
+    color: #222;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.option-btn:hover {
+    background: #dbeafe;
+}
+
+#progressText {
+    font-size: 16px;
+    color: #666;
+}
+
+#resultSummary,
+#feedbackMessage {
+    margin: 20px 0;
+    font-size: 18px;
+}
+
+canvas {
+    margin-top: 20px;
+}

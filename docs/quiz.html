@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structure Quiz</title>
+    <link rel="stylesheet" href="quiz.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <main class="container">
+
+        <section class="header">
+            <h1>Data Structure Quiz</h1>
+            <p>난이도와 문제 수를 선택하여 실력을 점검하세요.</p>
+        </section>
+
+        <!-- 시작 화면 -->
+        <section id="setupScreen" class="card">
+            <h2>Quiz Setup</h2>
+
+            <div class="setup-group">
+                <label>난이도 선택</label>
+                <select id="difficultySelect">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+
+            <div class="setup-group">
+                <label>문항 수 선택</label>
+                <select id="countSelect">
+                    <option value="5">5문제</option>
+                    <option value="10">10문제</option>
+                    <option value="15">15문제</option>
+                    <option value="20">20문제</option>
+                </select>
+            </div>
+
+            <button id="startBtn">퀴즈 시작</button>
+        </section>
+
+        <!-- 퀴즈 화면 -->
+        <section id="quizScreen" class="card" style="display:none;">
+            <h2>Quiz</h2>
+
+            <p id="progressText">1 / 5</p>
+
+            <h3 id="questionText">문제가 표시됩니다.</h3>
+
+            <div id="optionsContainer" class="options-container"></div>
+
+            <button id="nextBtn" style="display:none;">다음 문제</button>
+        </section>
+
+        <!-- 결과 화면 -->
+        <section id="resultScreen" class="card" style="display:none;">
+            <h2>Quiz Result</h2>
+
+            <p id="resultSummary"></p>
+
+            <canvas id="resultChart"></canvas>
+
+            <p id="feedbackMessage"></p>
+
+            <button id="retryBtn">다시하기</button>
+        </section>
+
+    </main>
+
+    <script src="quiz.js"></script>
+</body>
+</html>
