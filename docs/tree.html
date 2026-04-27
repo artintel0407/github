@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Tree Visualizer</title>
+    <link rel="stylesheet" href="tree.css">
+</head>
+<body>
+    <main class="container">
+        <section class="header">
+            <h1>General Tree Visualizer</h1>
+            <p>일반 트리의 부모-자식 구조와 순회를 시각화합니다.</p>
+        </section>
+
+        <section class="card">
+            <h2>General Tree</h2>
+
+            <div class="control-area">
+                <input type="text" id="parentInput" placeholder="parent">
+                <input type="text" id="valueInput" placeholder="new node">
+                <button id="addRootBtn">Add Root</button>
+                <button id="addChildBtn">Add Child</button>
+                <button id="removeBtn">Remove</button>
+                <button id="preorderBtn">Preorder</button>
+                <button id="postorderBtn">Postorder</button>
+            </div>
+
+            <div class="info-area">
+                <p>Root: <span id="rootValue">NULL</span></p>
+                <p>Size: <span id="sizeValue">0</span></p>
+            </div>
+
+            <div class="result-area">
+                Result: <span id="resultValue">NULL</span>
+            </div>
+
+            <div class="tree-area" id="treeArea">
+                <svg id="treeLines" class="tree-lines"></svg>
+
+                <div id="treeContainer" class="tree-container">
+                    <p class="empty-text">Root: NULL</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="tree.js"></script>
+</body>
+</html>
