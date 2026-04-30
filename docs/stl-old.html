@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structure Visualizer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f6f8;
+            color: #222;
+            font-family: Arial, sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 900px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #9CA3AF;
+
+            margin-bottom: 50px;
+        }
+
+        .grid {
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 25px;
+        }
+
+        .card {
+            background-color: white;
+            color: #222;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+
+            padding: 30px;
+
+            text-decoration: none;
+
+           
+
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+
+            background-color: #f9fafb;
+        }
+
+        .card-title {
+            font-size: 30px;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #D1D5DB;
+
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .title {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="title">
+            Data Structure Visualizer
+        </div>
+
+        <div class="subtitle">
+            Interactive visualization of fundamental data structures
+        </div>
+
+        <div class="grid">
+
+            <a href="stack.html" class="card">
+                <div class="card-title">Stack</div>
+
+                <div class="card-description">
+                    Visualize push and pop operations using LIFO structure.
+                </div>
+            </a>
+
+            <a href="queue.html" class="card">
+                <div class="card-title">Queue</div>
+
+                <div class="card-description">
+                    Explore enqueue and dequeue operations using FIFO structure.
+                </div>
+            </a>
+
+            <a href="array.html" class="card">
+                <div class="card-title">Array</div>
+
+                <div class="card-description">
+                    Access and modify indexed elements in a fixed-size array.
+                </div>
+            </a>
+
+            <a href="list.html" class="card">
+                <div class="card-title">Linked List</div>
+
+                <div class="card-description">
+                    Understand node connections and sequential traversal.
+                </div>
+            </a>
+
+            <a href="tree.html" class="card">
+                <div class="card-title">Tree</div>
+
+                <div class="card-description">
+                    Visualize hierarchical structures and traversal in a general tree.
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>
