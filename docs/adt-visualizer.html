@@ -1,89 +1,92 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Visualizer | Data Structure Learning Platform</title>
-    <link rel="stylesheet" href="adt-visualizer.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADT Visualizer | Data Structure Learning Platform</title>
+  <link rel="stylesheet" href="adt-visualizer.css" />
 </head>
 <body>
-    <main class="page">
-        <header class="hero">
-            <a class="back-link" href="index.html">← Home</a>
-            <p class="eyebrow">Interactive Visualizer</p>
-            <h1>코드로 배우는 자료구조 시각화</h1>
-            <p class="hero-description">
-                C++과 비슷한 간단한 코드를 입력하면 배열과 연결 리스트의 변화 과정을 단계별로 확인할 수 있습니다.
-                실제 C++ 컴파일러가 아니라, 학습용으로 제한된 문법만 해석합니다.
-            </p>
-        </header>
+  <main class="page">
+    <header class="topbar">
+      <a href="index.html">Home</a>
+      <a href="stl.html">STL Hub</a>
+      <a href="quiz.html">Quiz</a>
+    </header>
 
-        <section class="guide-grid" aria-label="사용 방법 안내">
-            <article class="guide-card">
-                <span class="guide-number">1</span>
-                <h2>자료구조 선택</h2>
-                <p>Array 또는 Linked List 탭을 선택하면 예시 코드와 설명이 자동으로 바뀝니다.</p>
-            </article>
-            <article class="guide-card">
-                <span class="guide-number">2</span>
-                <h2>코드 수정</h2>
-                <p>예시 코드를 그대로 실행하거나 숫자와 index를 바꿔서 직접 실험할 수 있습니다.</p>
-            </article>
-            <article class="guide-card">
-                <span class="guide-number">3</span>
-                <h2>단계별 실행</h2>
-                <p>Run 버튼을 누르면 각 연산이 1초 간격으로 재생되고, 현재 변화 위치가 강조됩니다.</p>
-            </article>
-        </section>
+    <section class="hero">
+      <p class="eyebrow">Code Based Visualizer</p>
+      <h1>코드로 배우는 ADT 시각화</h1>
+      <p>
+        간단한 명령어를 입력하면 Array, Stack, Queue, Linked List, Tree의 상태 변화를 단계별로 확인할 수 있습니다.
+      </p>
+    </section>
 
-        <section class="workspace">
-            <div class="left-panel">
-                <div class="panel-header">
-                    <div>
-                        <p class="panel-label">Code Input</p>
-                        <h2>실행할 예시 코드</h2>
-                    </div>
-                    <div class="tabs" role="tablist" aria-label="자료구조 선택">
-                        <button class="tab-btn active" type="button" data-mode="array">Array</button>
-                        <button class="tab-btn" type="button" data-mode="list">Linked List</button>
-                    </div>
-                </div>
+    <section class="guide-grid" aria-label="사용 방법">
+      <article class="guide-card">
+        <span>1</span>
+        <h2>자료구조 선택</h2>
+        <p>Array, Stack, Queue, Linked List, Tree 중 하나를 선택하세요.</p>
+      </article>
+      <article class="guide-card">
+        <span>2</span>
+        <h2>예제 실행</h2>
+        <p>예제 코드를 그대로 실행하거나 숫자와 노드 이름을 수정해보세요.</p>
+      </article>
+      <article class="guide-card">
+        <span>3</span>
+        <h2>단계별 확인</h2>
+        <p>각 연산이 어떤 위치를 바꾸는지 강조 표시로 확인할 수 있습니다.</p>
+      </article>
+    </section>
 
-                <div class="syntax-help" id="syntaxHelp"></div>
-                <textarea id="codeEditor" spellcheck="false" aria-label="시각화할 코드 입력"></textarea>
+    <section class="workspace">
+      <section class="left-panel">
+        <div class="panel-header">
+          <div>
+            <p class="panel-label">Code Input</p>
+            <h2 id="modeTitle">Array</h2>
+          </div>
+          <div class="tabs" role="tablist" aria-label="자료구조 선택">
+            <button class="tab-btn active" data-mode="array" type="button">Array</button>
+            <button class="tab-btn" data-mode="stack" type="button">Stack</button>
+            <button class="tab-btn" data-mode="queue" type="button">Queue</button>
+            <button class="tab-btn" data-mode="list" type="button">List</button>
+            <button class="tab-btn" data-mode="tree" type="button">Tree</button>
+          </div>
+        </div>
 
-                <div class="button-row">
-                    <button id="runBtn" class="primary-btn" type="button">▶ Run Visualization</button>
-                    <button id="resetBtn" class="secondary-btn" type="button">Reset Example</button>
-                    <button id="stopBtn" class="secondary-btn" type="button">Stop</button>
-                </div>
+        <div class="syntax-help" id="syntaxHelp"></div>
+        <textarea id="codeEditor" spellcheck="false" aria-label="시각화 코드 입력"></textarea>
 
-                <div class="notice">
-                    <strong>지원 문법</strong>
-                    <p id="supportedSyntax"></p>
-                </div>
-            </div>
+        <div class="button-row">
+          <button class="primary-btn" id="runBtn" type="button">▶ Run</button>
+          <button class="secondary-btn" id="stepBtn" type="button">Step</button>
+          <button class="secondary-btn" id="resetBtn" type="button">Reset Example</button>
+        </div>
 
-            <div class="right-panel">
-                <div class="panel-header">
-                    <div>
-                        <p class="panel-label">Visual Output</p>
-                        <h2 id="visualTitle">Array 상태 변화</h2>
-                    </div>
-                    <div class="step-badge" id="stepBadge">Step 0 / 0</div>
-                </div>
+        <div class="supported-box">
+          <strong>지원 문법</strong>
+          <p id="supportedSyntax"></p>
+        </div>
+      </section>
 
-                <div class="status-box" id="statusMsg">왼쪽 코드를 확인한 뒤 Run Visualization을 눌러보세요.</div>
-                <div class="visual-stage" id="visualStage"></div>
+      <section class="right-panel">
+        <div class="panel-header">
+          <div>
+            <p class="panel-label">Visual Output</p>
+            <h2 id="visualTitle">Array 상태</h2>
+          </div>
+          <div class="step-badge" id="stepBadge">Step 0 / 0</div>
+        </div>
 
-                <div class="legend">
-                    <span><i class="legend-active"></i> 현재 변화 위치</span>
-                    <span><i class="legend-normal"></i> 일반 상태</span>
-                </div>
-            </div>
-        </section>
-    </main>
+        <div class="status-box" id="statusMsg">예제를 실행하거나 코드를 수정한 뒤 Run을 눌러보세요.</div>
+        <div class="visual-stage" id="visualStage"></div>
+        <div class="traversal-result" id="traversalResult" hidden></div>
+      </section>
+    </section>
+  </main>
 
-    <script src="adt-visualizer.js"></script>
+  <script src="adt-visualizer.js"></script>
 </body>
 </html>
