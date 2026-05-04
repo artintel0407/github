@@ -4,71 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Structure Quiz</title>
+    <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="quiz.css">
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <main class="container">
+    <main class="page">
+        <header class="topbar">
+            <a href="index.html">Home</a>
+            <a href="stl.html">STL Hub</a>
+            <a href="adt-visualizer.html">Code Visualizer</a>
+        </header>
 
-        <section class="header">
-            <h1>Data Structure Quiz</h1>
-            <p>난이도와 문제 수를 선택하여 실력을 점검하세요.</p>
+        <section class="hero">
+            <p class="eyebrow">Data Structure Quiz</p>
+            <h1>자료구조 퀴즈</h1>
+            <p>난이도, 문항 수, 자료구조 범위를 선택하고 지금 이해도를 점검하세요.</p>
         </section>
 
-        <!-- 시작 화면 -->
-        <section id="setupScreen" class="card">
-            <h2>Quiz Setup</h2>
-
-            <div class="setup-group">
-                <label>난이도 선택</label>
-                <select id="difficultySelect">
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                </select>
+        <section id="setupScreen" class="quiz-panel">
+            <div class="panel-header">
+                <div>
+                    <p class="panel-label">Quiz Setup</p>
+                    <h2>출제 조건 선택</h2>
+                </div>
+                <span class="step-badge">Ready</span>
             </div>
 
-            <div class="setup-group">
-                <label>문항 수 선택</label>
-                <select id="countSelect">
-                    <option value="5">5문제</option>
-                    <option value="10">10문제</option>
-                    <option value="15">15문제</option>
-                    <option value="20">20문제</option>
-                </select>
+            <div class="setup-grid">
+                <label class="setup-field">
+                    <span>난이도</span>
+                    <select id="difficultySelect">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </label>
+
+                <label class="setup-field">
+                    <span>문항 수</span>
+                    <select id="countSelect">
+                        <option value="5">5문제</option>
+                        <option value="10">10문제</option>
+                        <option value="15">15문제</option>
+                        <option value="20">20문제</option>
+                    </select>
+                </label>
+
+                <label class="setup-field">
+                    <span>카테고리</span>
+                    <select id="categorySelect">
+                        <option value="all">전체</option>
+                        <option value="stack">Stack</option>
+                        <option value="queue">Queue</option>
+                        <option value="array">Array</option>
+                        <option value="list">List</option>
+                        <option value="tree">Tree</option>
+                    </select>
+                </label>
             </div>
 
-            <button id="startBtn">퀴즈 시작</button>
+            <div class="status-box" id="setupMessage">
+                선택한 조건에 맞는 문제를 무작위로 출제합니다.
+            </div>
+
+            <div class="button-row">
+                <button class="primary-btn" id="startBtn" type="button">퀴즈 시작</button>
+            </div>
         </section>
 
-        <!-- 퀴즈 화면 -->
-        <section id="quizScreen" class="card" style="display:none;">
-            <h2>Quiz</h2>
+        <section id="quizScreen" class="quiz-panel" hidden>
+            <div class="panel-header">
+                <div>
+                    <p class="panel-label">Question</p>
+                    <h2 id="quizTitle">Quiz</h2>
+                </div>
+                <span class="step-badge" id="scorePill">0 correct</span>
+            </div>
 
-            <p id="progressText">1 / 5</p>
+            <div class="progress-wrap">
+                <div class="progress-meta">
+                    <span id="progressText">1 / 5</span>
+                    <span id="progressPercent">20%</span>
+                </div>
+                <div class="progress-track" aria-hidden="true">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
 
             <h3 id="questionText">문제가 표시됩니다.</h3>
 
             <div id="optionsContainer" class="options-container"></div>
 
-            <button id="nextBtn" style="display:none;">다음 문제</button>
+            <div id="answerFeedback" class="feedback-box" hidden></div>
+
+            <div class="button-row">
+                <button class="secondary-btn" id="nextBtn" type="button" hidden>다음 문제</button>
+            </div>
         </section>
 
-        <!-- 결과 화면 -->
-        <section id="resultScreen" class="card" style="display:none;">
-            <h2>Quiz Result</h2>
+        <section id="resultScreen" class="quiz-panel" hidden>
+            <div class="panel-header">
+                <div>
+                    <p class="panel-label">Result</p>
+                    <h2>Quiz Result</h2>
+                </div>
+                <span class="step-badge" id="resultBadge">Done</span>
+            </div>
 
-            <p id="resultSummary"></p>
+            <div class="result-summary" id="resultSummary"></div>
 
-            <canvas id="resultChart"></canvas>
+            <div class="chart-box">
+                <canvas id="resultChart"></canvas>
+            </div>
 
-            <p id="feedbackMessage"></p>
+            <div class="feedback-box" id="feedbackMessage"></div>
 
-            <button id="retryBtn">다시하기</button>
+            <div class="button-row">
+                <button class="primary-btn" id="retryBtn" type="button">다시하기</button>
+            </div>
         </section>
-
     </main>
 
     <script src="quiz.js"></script>

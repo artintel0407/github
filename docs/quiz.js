@@ -499,6 +499,7 @@ let selectedQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let chartInstance = null;
+let answerLocked = false;
 
 const stats = {
     Stack: { correct: 0, total: 0 },
@@ -510,66 +511,159 @@ const stats = {
     Tree: { correct: 0, total: 0 }
 };
 
+const categoryMap = {
+    all: null,
+    stack: "Stack",
+    queue: "Queue",
+    array: "Array",
+    list: "List",
+    tree: "Tree"
+};
+
 const setupScreen = document.getElementById("setupScreen");
 const quizScreen = document.getElementById("quizScreen");
 const resultScreen = document.getElementById("resultScreen");
 
 const difficultySelect = document.getElementById("difficultySelect");
 const countSelect = document.getElementById("countSelect");
+const categorySelect = document.getElementById("categorySelect");
+const setupMessage = document.getElementById("setupMessage");
 
+const quizTitle = document.getElementById("quizTitle");
 const questionText = document.getElementById("questionText");
 const optionsContainer = document.getElementById("optionsContainer");
 const progressText = document.getElementById("progressText");
+const progressPercent = document.getElementById("progressPercent");
+const progressBar = document.getElementById("progressBar");
 
 const nextBtn = document.getElementById("nextBtn");
+const scorePill = document.getElementById("scorePill");
+const answerFeedback = document.getElementById("answerFeedback");
 
 const resultSummary = document.getElementById("resultSummary");
 const feedbackMessage = document.getElementById("feedbackMessage");
+const resultBadge = document.getElementById("resultBadge");
 
 document.getElementById("startBtn").addEventListener("click", startQuiz);
 document.getElementById("retryBtn").addEventListener("click", resetQuiz);
 nextBtn.addEventListener("click", nextQuestion);
+categorySelect.addEventListener("change", updateSetupMessage);
+difficultySelect.addEventListener("change", updateSetupMessage);
+countSelect.addEventListener("change", updateSetupMessage);
 
 function shuffleArray(array) {
     return [...array].sort(() => Math.random() - 0.5);
 }
 
-function startQuiz() {
+function getSelectedCategory() {
+    return categoryMap[categorySelect.value] || null;
+}
+
+function getCategoryLabel() {
+    if (categorySelect.value === "all") return "전체";
+    return categorySelect.options[categorySelect.selectedIndex].textContent;
+}
+
+function getFilteredQuestions() {
     const difficulty = difficultySelect.value;
+    const category = getSelectedCategory();
+
+    return allQuestions.filter(q => {
+        const difficultyMatches = q.difficulty === difficulty;
+        const categoryMatches = category === null || q.category === category;
+
+        return difficultyMatches && categoryMatches;
+    });
+}
+
+function showScreen(screen) {
+    setupScreen.hidden = screen !== setupScreen;
+    quizScreen.hidden = screen !== quizScreen;
+    resultScreen.hidden = screen !== resultScreen;
+}
+
+function setFeedback(message, type = "") {
+    answerFeedback.hidden = false;
+    answerFeedback.textContent = message;
+    answerFeedback.className = "feedback-box";
+
+    if (type) {
+        answerFeedback.classList.add(type);
+    }
+}
+
+function updateSetupMessage() {
+    const filtered = getFilteredQuestions();
+    const categoryLabel = getCategoryLabel();
+    const difficultyLabel = difficultySelect.options[difficultySelect.selectedIndex].textContent;
     const count = Number(countSelect.value);
+    const shortageText = filtered.length > 0 && filtered.length < count
+        ? " 선택한 문항 수보다 적으면 가능한 문제를 모두 출제합니다."
+        : "";
 
-    const filtered = allQuestions.filter(q => q.difficulty === difficulty);
+    setupMessage.textContent =
+        `${categoryLabel} / ${difficultyLabel} 조건에서 ${filtered.length}개 문제를 사용할 수 있습니다.${shortageText}`;
 
-    if (filtered.length < count) {
-        alert(`해당 난이도 문제는 ${filtered.length}개뿐입니다.`);
+    setupMessage.className = "status-box";
+}
+
+function applyCategoryFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const category = (params.get("category") || "").toLowerCase();
+
+    if (category && categoryMap[category]) {
+        categorySelect.value = category;
+    }
+
+    updateSetupMessage();
+}
+
+function startQuiz() {
+    const count = Number(countSelect.value);
+    const filtered = getFilteredQuestions();
+    const quizCount = Math.min(count, filtered.length);
+
+    if (quizCount === 0) {
+        setupMessage.textContent =
+            "선택한 조건에 사용할 수 있는 문제가 없습니다. 조건을 바꿔주세요.";
+        setupMessage.className = "status-box status-warning";
         return;
     }
 
-    selectedQuestions = shuffleArray(filtered).slice(0, count);
+    selectedQuestions = shuffleArray(filtered).slice(0, quizCount);
 
     currentIndex = 0;
     score = 0;
+    answerLocked = false;
 
     for (let key in stats) {
         stats[key].correct = 0;
         stats[key].total = 0;
     }
 
-    setupScreen.style.display = "none";
-    quizScreen.style.display = "block";
-    resultScreen.style.display = "none";
+    quizTitle.textContent = `${getCategoryLabel()} Quiz`;
+    scorePill.textContent = "0 correct";
+    nextBtn.hidden = true;
+    answerFeedback.hidden = true;
 
-    nextBtn.style.display = "none";
-
+    showScreen(quizScreen);
     loadQuestion();
 }
 
 function loadQuestion() {
     const q = selectedQuestions[currentIndex];
+    const percent = Math.round(((currentIndex + 1) / selectedQuestions.length) * 100);
+
+    answerLocked = false;
 
     questionText.textContent = q.question;
     progressText.textContent =
         `${currentIndex + 1} / ${selectedQuestions.length}`;
+    progressPercent.textContent = `${percent}%`;
+    progressBar.style.width = `${percent}%`;
+    scorePill.textContent = `${score} correct`;
+    answerFeedback.hidden = true;
+    answerFeedback.textContent = "";
 
     optionsContainer.innerHTML = "";
 
@@ -587,7 +681,10 @@ function loadQuestion() {
 }
 
 function checkAnswer(selected) {
+    if (answerLocked) return;
+
     const q = selectedQuestions[currentIndex];
+    answerLocked = true;
 
     if (!stats[q.category]) {
         stats[q.category] = { correct: 0, total: 0 };
@@ -598,16 +695,29 @@ function checkAnswer(selected) {
     if (selected.trim() === q.answer.trim()) {
         score++;
         stats[q.category].correct++;
-        alert("정답!");
+        setFeedback("정답입니다. 좋아요, 다음 문제로 넘어가세요.", "correct");
     } else {
-        alert(`오답! 정답은 ${q.answer}`);
+        setFeedback(`오답입니다. 정답은 "${q.answer}"입니다.`, "wrong");
     }
 
     Array.from(optionsContainer.children).forEach(btn => {
+        const option = btn.textContent.trim();
+
+        if (option === selected.trim()) {
+            btn.classList.add("selected");
+        }
+
+        if (option === q.answer.trim()) {
+            btn.classList.add("correct");
+        } else if (option === selected.trim()) {
+            btn.classList.add("wrong");
+        }
+
         btn.disabled = true;
     });
 
-    nextBtn.style.display = "inline-block";
+    scorePill.textContent = `${score} correct`;
+    nextBtn.hidden = false;
 }
 
 function nextQuestion() {
@@ -618,16 +728,17 @@ function nextQuestion() {
         return;
     }
 
-    nextBtn.style.display = "none";
+    nextBtn.hidden = true;
     loadQuestion();
 }
 
 function showResults() {
-    quizScreen.style.display = "none";
-    resultScreen.style.display = "block";
+    showScreen(resultScreen);
 
     resultSummary.textContent =
         `총 ${selectedQuestions.length}문제 중 ${score}문제 정답`;
+    resultBadge.textContent =
+        `${Math.round((score / selectedQuestions.length) * 100)}%`;
 
     let weakest = "None";
     let lowestRate = 101;
@@ -646,12 +757,20 @@ function showResults() {
 
     feedbackMessage.textContent =
         `${weakest} 분야의 복습이 필요합니다.`;
+    feedbackMessage.className = "feedback-box";
 
     drawChart();
 }
 
 function drawChart() {
     const ctx = document.getElementById("resultChart");
+
+    if (typeof Chart === "undefined") {
+        feedbackMessage.textContent =
+            "차트를 불러오지 못했습니다. 점수와 취약 분야는 위 결과를 참고하세요.";
+        feedbackMessage.className = "feedback-box warning";
+        return;
+    }
 
     if (chartInstance) {
         chartInstance.destroy();
@@ -678,6 +797,11 @@ function drawChart() {
 }
 
 function resetQuiz() {
-    resultScreen.style.display = "none";
-    setupScreen.style.display = "block";
+    answerLocked = false;
+    answerFeedback.hidden = true;
+    nextBtn.hidden = true;
+    updateSetupMessage();
+    showScreen(setupScreen);
 }
+
+applyCategoryFromUrl();
