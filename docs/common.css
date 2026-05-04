@@ -1,0 +1,203 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #f5f6f8;
+    color: #222;
+    font-family: Arial, sans-serif;
+}
+
+.page {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 28px 0 56px;
+}
+
+.topbar,
+.top-nav {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 34px;
+}
+
+.topbar {
+    align-items: center;
+}
+
+.top-nav {
+    justify-content: flex-end;
+}
+
+.topbar a,
+.top-nav a,
+.back-link,
+.nav-link {
+    color: #444;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.top-nav a {
+    padding: 8px 12px;
+    border-radius: 999px;
+}
+
+.topbar a:hover,
+.top-nav a:hover,
+.back-link:hover,
+.nav-link:hover {
+    color: #3182f6;
+}
+
+.top-nav a:hover {
+    background-color: #e8f1ff;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.eyebrow,
+.panel-label {
+    color: #3182f6;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.hero h1 {
+    font-size: 46px;
+    margin-bottom: 14px;
+}
+
+.hero p,
+.hero-description {
+    max-width: 760px;
+    margin: 0 auto;
+    color: #666;
+    line-height: 1.7;
+    font-size: 17px;
+}
+
+.card,
+.panel,
+.sidebar,
+.structure-list,
+.detail-panel {
+    background-color: #fff;
+    border-radius: 24px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.primary-btn,
+.secondary-btn,
+.danger-btn,
+.primary-link,
+.secondary-link {
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.primary-link,
+.secondary-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.primary-btn,
+.primary-link {
+    background-color: #3182f6;
+    color: #fff;
+}
+
+.primary-btn:hover,
+.primary-link:hover {
+    background-color: #1b64da;
+}
+
+.secondary-btn,
+.secondary-link {
+    background-color: #edf0f3;
+    color: #333;
+}
+
+.secondary-btn:hover,
+.secondary-link:hover {
+    background-color: #dde2e8;
+}
+
+.danger-btn {
+    background-color: #fff0f0;
+    color: #d92d20;
+}
+
+.danger-btn:hover {
+    background-color: #ffe1e1;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3182f6;
+    box-shadow: 0 0 0 4px rgba(49, 130, 246, 0.12);
+}
+
+.status-pill,
+.difficulty-badge,
+.step-badge {
+    white-space: nowrap;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background-color: #e8f1ff;
+    color: #3182f6;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.status-message,
+.status-box,
+.traversal-result,
+.result-box {
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    line-height: 1.6;
+}
+
+.status-message,
+.status-box {
+    background-color: #f8f9fa;
+    color: #444;
+}
+
+.status-success {
+    background-color: #e8f8f0;
+    border-color: #b7ebc6;
+    color: #0f5132;
+}
+
+.status-error {
+    background-color: #fff0f0;
+    border-color: #f5c2c7;
+    color: #d92d20;
+}
+
+.status-warning {
+    background-color: #fff9e6;
+    border-color: #f3d98b;
+    color: #5a4700;
+}
