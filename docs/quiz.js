@@ -860,6 +860,126 @@ const additionalQuestions = [
         options: ["모든 노드를 일정한 순서로 방문하기 위해", "배열 크기를 고정하기 위해", "큐의 앞쪽을 비우기 위해", "스택의 top만 보기 위해"],
         answer: "모든 노드를 일정한 순서로 방문하기 위해",
         explanation: "트리는 계층 구조라 preorder, postorder 같은 순회 규칙으로 모든 노드를 방문합니다."
+    },
+    {
+        category: "Stack",
+        difficulty: "hard",
+        question: "빈 Stack에 push(3), push(5), pop(), push(7)을 실행했다. 마지막 top 값은?",
+        options: ["7", "5", "3", "NULL"],
+        answer: "7",
+        explanation: "5는 pop으로 제거되고, 이후 7이 push되므로 top은 7입니다."
+    },
+    {
+        category: "Stack",
+        difficulty: "hard",
+        question: "Stack으로 문자열 A B C를 차례로 push한 뒤 두 번 pop하면 제거되는 순서는?",
+        options: ["C, B", "A, B", "B, C", "C, A"],
+        answer: "C, B",
+        explanation: "Stack은 LIFO이므로 마지막에 들어간 C가 먼저 나오고, 그다음 B가 나옵니다."
+    },
+    {
+        category: "Stack",
+        difficulty: "hard",
+        question: "괄호 문자열 '(()())'를 Stack으로 검사할 때 최대로 쌓이는 여는 괄호 수는?",
+        options: ["2", "1", "3", "4"],
+        answer: "2",
+        explanation: "처음 두 문자가 '(('라서 Stack 크기가 2까지 증가하고, 이후에는 닫는 괄호로 줄어듭니다."
+    },
+    {
+        category: "Queue",
+        difficulty: "hard",
+        question: "빈 Queue에 enqueue(1), enqueue(2), dequeue(), enqueue(3)을 실행했다. front 값은?",
+        options: ["2", "1", "3", "NULL"],
+        answer: "2",
+        explanation: "dequeue로 1이 제거되고 Queue에는 2, 3이 남으므로 front는 2입니다."
+    },
+    {
+        category: "Queue",
+        difficulty: "hard",
+        question: "Queue에 A, B, C가 순서대로 들어 있다. dequeue를 두 번 실행하면 남는 front 값은?",
+        options: ["C", "A", "B", "NULL"],
+        answer: "C",
+        explanation: "FIFO 구조라 A와 B가 차례로 제거되고 C가 front에 남습니다."
+    },
+    {
+        category: "Queue",
+        difficulty: "hard",
+        question: "크기 5의 원형 Queue에서 front=3, rear=1이라면 현재 데이터가 차지한 칸 수는? 단, 한 칸은 비워 구분한다.",
+        options: ["3", "2", "4", "1"],
+        answer: "3",
+        explanation: "원형 Queue의 크기는 (rear - front + capacity) % capacity로 계산해 (1 - 3 + 5) % 5 = 3입니다."
+    },
+    {
+        category: "Array",
+        difficulty: "hard",
+        question: "Array [10, 20, 30, 40]에서 index 1에 15를 삽입하면 30은 어느 index로 이동하는가?",
+        options: ["3", "2", "1", "4"],
+        answer: "3",
+        explanation: "index 1에 삽입하면 기존 index 1 이후 원소들이 한 칸씩 뒤로 밀려 30은 index 3이 됩니다."
+    },
+    {
+        category: "Array",
+        difficulty: "hard",
+        question: "정렬된 Array에서 이진 탐색은 선형 탐색보다 언제 더 유리한가?",
+        options: ["원소 수가 많고 여러 번 검색할 때", "원소가 1개뿐일 때", "정렬되지 않았을 때", "삽입만 계속할 때"],
+        answer: "원소 수가 많고 여러 번 검색할 때",
+        explanation: "이진 탐색은 O(log n)이므로 데이터가 정렬되어 있고 검색 횟수가 많을수록 장점이 커집니다."
+    },
+    {
+        category: "Array",
+        difficulty: "hard",
+        question: "Array의 맨 앞에 원소를 계속 삽입할 때 전체 비용이 커지는 주된 이유는?",
+        options: ["기존 원소를 매번 뒤로 이동해야 해서", "항상 root를 바꿔야 해서", "포인터를 두 개씩 저장해서", "Queue로 변환돼서"],
+        answer: "기존 원소를 매번 뒤로 이동해야 해서",
+        explanation: "맨 앞 삽입은 모든 기존 원소를 한 칸씩 뒤로 밀어야 하므로 한 번의 삽입도 O(n)이 될 수 있습니다."
+    },
+    {
+        category: "List",
+        difficulty: "hard",
+        question: "Singly Linked List에서 tail 포인터가 없을 때 맨 뒤 삽입의 시간복잡도는?",
+        options: ["O(n)", "O(1)", "O(log n)", "O(n²)"],
+        answer: "O(n)",
+        explanation: "tail이 없으면 head부터 마지막 노드까지 찾아가야 하므로 O(n)이 걸립니다."
+    },
+    {
+        category: "List",
+        difficulty: "hard",
+        question: "Linked List에서 삭제할 노드의 이전 노드를 알고 있다면 연결을 바꾸는 삭제 자체의 시간복잡도는?",
+        options: ["O(1)", "O(n)", "O(log n)", "O(n²)"],
+        answer: "O(1)",
+        explanation: "이전 노드의 next를 삭제할 노드의 다음 노드로 바꾸면 되므로 연결 변경 자체는 O(1)입니다."
+    },
+    {
+        category: "List",
+        difficulty: "hard",
+        question: "Array와 Linked List 중 index로 100번째 원소에 바로 접근하기 더 유리한 구조는?",
+        options: ["Array", "Linked List", "둘 다 항상 O(n)", "Tree"],
+        answer: "Array",
+        explanation: "Array는 index로 위치를 계산해 O(1)에 접근하지만, Linked List는 앞에서부터 따라가야 합니다."
+    },
+    {
+        category: "Tree",
+        difficulty: "hard",
+        question: "Binary Tree에서 preorder 결과가 A B C이고 inorder 결과가 B A C라면 root는?",
+        options: ["A", "B", "C", "알 수 없음"],
+        answer: "A",
+        explanation: "preorder는 root를 가장 먼저 방문하므로 첫 값 A가 root입니다."
+    },
+    {
+        category: "Tree",
+        difficulty: "hard",
+        question: "BST에 5, 3, 7, 4를 순서대로 삽입했다. 4는 어느 노드의 자식이 되는가?",
+        options: ["3", "5", "7", "root"],
+        answer: "3",
+        explanation: "4는 5보다 작아 왼쪽으로 가고, 3보다 크므로 3의 오른쪽 자식이 됩니다."
+    },
+    {
+        category: "Tree",
+        difficulty: "hard",
+        question: "노드가 n개인 Tree를 한 번 순회하며 모든 노드를 방문할 때 시간복잡도는?",
+        options: ["O(n)", "O(1)", "O(log n)", "O(n²)"],
+        answer: "O(n)",
+        explanation: "순회는 각 노드를 한 번씩 방문하므로 노드 수에 비례하는 O(n)입니다."
     }
 ];
 
@@ -885,10 +1005,6 @@ function normalizeQuestion(question) {
     if (question.category === "Sequence") {
         merged.category = revision.category || inferSequenceCategory(question);
         merged.explanation = merged.explanation || "Sequence 개념은 구현 관점에 따라 Array 또는 List 범주에서 함께 다룹니다.";
-    }
-
-    if (merged.difficulty === "hard" && ["Stack", "Queue", "Array", "List", "Tree"].includes(merged.category)) {
-        merged.difficulty = "medium";
     }
 
     merged.explanation = merged.explanation || `${merged.category}의 핵심 개념을 확인하는 문제입니다.`;
