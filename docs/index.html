@@ -11,7 +11,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-
             padding: 20px;
         }
 
@@ -24,56 +23,46 @@
             text-align: center;
             font-size: 52px;
             font-weight: bold;
-
             margin-bottom: 16px;
         }
 
         .subtitle {
             text-align: center;
             color: #666;
-
             font-size: 18px;
-
             margin-bottom: 60px;
         }
 
         .grid {
             display: grid;
-
             grid-template-columns: repeat(3, 1fr);
-
             gap: 28px;
         }
 
         .card {
+            background-color: white;
+            border-radius: 24px;
             padding: 36px 28px;
-
             text-decoration: none;
-
             color: #222;
-
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
             transition: 0.2s;
         }
 
         .card:hover {
             transform: translateY(-6px);
-
             background-color: #f9fafb;
         }
 
         .card-title {
             font-size: 32px;
-
             font-weight: bold;
-
             margin-bottom: 16px;
         }
 
         .card-description {
             color: #666;
-
             line-height: 1.7;
-
             font-size: 16px;
         }
 
@@ -99,7 +88,7 @@
         </div>
 
         <div class="subtitle">
-            Learn data structures through visualization, quizzes, and theory.
+            Review core concepts, try visualizers, and check your understanding with quizzes.
         </div>
 
         <div class="grid">
@@ -107,7 +96,7 @@
                 <div class="card-title">Basic Theory</div>
 
                 <div class="card-description">
-                    Study core concepts and theoretical foundations of data structures.
+                    Quick review notes for Stack, Queue, Array, List, and Tree before practice.
                 </div>
             </a>
             
@@ -115,7 +104,7 @@
                 <div class="card-title">STL</div>
 
                 <div class="card-description">
-                    Explore interactive visualizations of fundamental data structures.
+                    Choose a data structure and open the matching interactive visualizer.
                 </div>
             </a>
 
@@ -123,14 +112,14 @@
                 <div class="card-title">Quiz</div>
 
                 <div class="card-description">
-                    Solve quizzes and test your understanding of data structures.
+                    Solve concept and reasoning questions by difficulty and topic.
                 </div>
             </a>
 
             <a href="adt-visualizer.html" class="card">
                 <div class="card-title">Code Visualizer</div>
                 <div class="card-description">
-                    Type simple array or linked list code and watch each operation step by step.
+                    Run simple ADT commands and watch each operation update the structure.
                 </div>
             </a>
 
