@@ -1,26 +1,4 @@
 const structures = {
-    stack: {
-        title: 'Stack',
-        category: 'Linear Structure',
-        difficulty: 'Basic',
-        description: 'Stack은 마지막에 들어온 데이터가 가장 먼저 나가는 LIFO 구조입니다. 함수 호출, 되돌리기 기능, 괄호 검사처럼 최근 작업을 먼저 처리해야 할 때 자주 사용됩니다.',
-        concept: 'Top 위치에서만 삽입과 삭제가 일어납니다. 그래서 구조가 단순하고 push/pop 연산을 빠르게 이해할 수 있습니다.',
-        operations: ['push(value): top에 삽입', 'pop(): top 원소 제거', 'top(): 가장 위 원소 확인'],
-        complexities: ['push: O(1)', 'pop: O(1)', 'top: O(1)'],
-        preview: 'Push를 누르면 값이 위쪽에 쌓이고, Pop을 누르면 가장 위 값부터 제거되는 흐름을 확인하세요.',
-        link: 'visualizer.html?mode=stack'
-    },
-    queue: {
-        title: 'Queue',
-        category: 'Linear Structure',
-        difficulty: 'Basic',
-        description: 'Queue는 먼저 들어온 데이터가 먼저 나가는 FIFO 구조입니다. 대기열, BFS, 작업 처리 순서처럼 순서를 보장해야 하는 상황에서 사용됩니다.',
-        concept: '삽입은 Rear에서, 삭제는 Front에서 일어납니다. Stack과 반대로 먼저 들어온 값이 먼저 처리됩니다.',
-        operations: ['enqueue(value): rear에 삽입', 'dequeue(): front 원소 제거', 'front(): 가장 앞 원소 확인'],
-        complexities: ['enqueue: O(1)', 'dequeue: O(1)', 'front: O(1)'],
-        preview: 'Enqueue로 뒤에 값을 추가하고, Dequeue로 앞에서부터 값이 빠지는 과정을 확인하세요.',
-        link: 'visualizer.html?mode=queue'
-    },
     array: {
         title: 'Array',
         category: 'Sequence Structure',
@@ -42,6 +20,28 @@ const structures = {
         complexities: ['search: O(n)', 'insert front: O(1)', 'remove front: O(1)'],
         preview: '노드 사이에 화살표가 생기고 NULL로 끝나는 연결 구조를 확인하세요.',
         link: 'visualizer.html?mode=list'
+    },
+    stack: {
+        title: 'Stack',
+        category: 'Linear Structure',
+        difficulty: 'Basic',
+        description: 'Stack은 마지막에 들어온 데이터가 가장 먼저 나가는 LIFO 구조입니다. 함수 호출, 되돌리기 기능, 괄호 검사처럼 최근 작업을 먼저 처리해야 할 때 자주 사용됩니다.',
+        concept: 'Top 위치에서만 삽입과 삭제가 일어납니다. 그래서 구조가 단순하고 push/pop 연산을 빠르게 이해할 수 있습니다.',
+        operations: ['push(value): top에 삽입', 'pop(): top 원소 제거', 'top(): 가장 위 원소 확인'],
+        complexities: ['push: O(1)', 'pop: O(1)', 'top: O(1)'],
+        preview: 'Push를 누르면 값이 위쪽에 쌓이고, Pop을 누르면 가장 위 값부터 제거되는 흐름을 확인하세요.',
+        link: 'visualizer.html?mode=stack'
+    },
+    queue: {
+        title: 'Queue',
+        category: 'Linear Structure',
+        difficulty: 'Basic',
+        description: 'Queue는 먼저 들어온 데이터가 먼저 나가는 FIFO 구조입니다. 대기열, BFS, 작업 처리 순서처럼 순서를 보장해야 하는 상황에서 사용됩니다.',
+        concept: '삽입은 Rear에서, 삭제는 Front에서 일어납니다. Stack과 반대로 먼저 들어온 값이 먼저 처리됩니다.',
+        operations: ['enqueue(value): rear에 삽입', 'dequeue(): front 원소 제거', 'front(): 가장 앞 원소 확인'],
+        complexities: ['enqueue: O(1)', 'dequeue: O(1)', 'front: O(1)'],
+        preview: 'Enqueue로 뒤에 값을 추가하고, Dequeue로 앞에서부터 값이 빠지는 과정을 확인하세요.',
+        link: 'visualizer.html?mode=queue'
     },
     tree: {
         title: 'Tree',
@@ -103,4 +103,4 @@ cards.forEach((card) => {
     });
 });
 
-selectStructure('stack');
+selectStructure('array');

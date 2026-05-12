@@ -1,20 +1,4 @@
 const structureInfo = {
-    stack: {
-        title: 'Stack',
-        visualTitle: 'Stack 상태',
-        description: 'LIFO(Last In First Out) 구조입니다. 마지막에 들어간 값이 가장 먼저 나옵니다.',
-        concept: 'Top 위치에서만 삽입과 삭제가 일어나는 선형 자료구조입니다.',
-        operations: 'push(value), pop(), top()',
-        complexity: 'push O(1), pop O(1), top O(1)'
-    },
-    queue: {
-        title: 'Queue',
-        visualTitle: 'Queue 상태',
-        description: 'FIFO(First In First Out) 구조입니다. 먼저 들어간 값이 가장 먼저 나옵니다.',
-        concept: 'Rear에서 삽입하고 Front에서 삭제하는 선형 자료구조입니다.',
-        operations: 'enqueue(value), dequeue(), front(), rear()',
-        complexity: 'enqueue O(1), dequeue O(1), front O(1)'
-    },
     array: {
         title: 'Array',
         visualTitle: 'Array 상태',
@@ -31,6 +15,22 @@ const structureInfo = {
         operations: 'insertFront(value), insertBack(value), removeFront(), removeBack()',
         complexity: 'front insert/remove O(1), search O(n)'
     },
+    stack: {
+        title: 'Stack',
+        visualTitle: 'Stack 상태',
+        description: 'LIFO(Last In First Out) 구조입니다. 마지막에 들어간 값이 가장 먼저 나옵니다.',
+        concept: 'Top 위치에서만 삽입과 삭제가 일어나는 선형 자료구조입니다.',
+        operations: 'push(value), pop(), top()',
+        complexity: 'push O(1), pop O(1), top O(1)'
+    },
+    queue: {
+        title: 'Queue',
+        visualTitle: 'Queue 상태',
+        description: 'FIFO(First In First Out) 구조입니다. 먼저 들어간 값이 가장 먼저 나옵니다.',
+        concept: 'Rear에서 삽입하고 Front에서 삭제하는 선형 자료구조입니다.',
+        operations: 'enqueue(value), dequeue(), front(), rear()',
+        complexity: 'enqueue O(1), dequeue O(1), front O(1)'
+    },
     tree: {
         title: 'Tree',
         visualTitle: 'General Tree 상태',
@@ -42,7 +42,7 @@ const structureInfo = {
 };
 
 const state = {
-    mode: 'stack',
+    mode: 'array',
     stack: [],
     queue: [],
     array: new Array(8).fill(0),
@@ -727,7 +727,7 @@ function loadModeFromUrl() {
     if (structureInfo[mode]) {
         setMode(mode);
     } else {
-        setMode('stack');
+        setMode('array');
     }
 }
 
