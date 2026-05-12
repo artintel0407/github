@@ -500,14 +500,20 @@ textarea:focus {
   height: 64px;
   border-radius: 50%;
   border: 2px solid #3182f6;
-  background: #3182f6;
-  color: white;
+  background: white;
+  color: #222;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   font-size: 20px;
   transition: 0.22s ease;
+}
+
+.tree-node.active {
+  background: #fff7cd;
+  border-color: #f7c948;
+  color: #222;
 }
 
 .children {

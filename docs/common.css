@@ -201,3 +201,16 @@ textarea:focus {
     border-color: #f3d98b;
     color: #5a4700;
 }
+
+@media (max-width: 900px) {
+    .page {
+        width: min(100%, calc(100% - 24px));
+        padding: 22px 12px 32px;
+    }
+
+    .topbar,
+    .top-nav {
+        flex-wrap: wrap;
+    }
+}
+

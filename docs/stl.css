@@ -213,3 +213,13 @@
         width: 100%;
     }
 }
+
+@media (max-width: 640px) {
+    .structure-list {
+        grid-template-columns: 1fr;
+    }
+
+    .action-row {
+        flex-direction: column;
+    }
+}

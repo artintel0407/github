@@ -208,3 +208,14 @@ canvas {
         flex-wrap: wrap;
     }
 }
+
+@media (max-width: 650px) {
+    .setup-field select {
+        font-size: 14px;
+    }
+
+    .button-row {
+        justify-content: center;
+    }
+}
+
