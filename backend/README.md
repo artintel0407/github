@@ -37,3 +37,42 @@ curl http://127.0.0.1:8000/api/ping
 ```json
 {"message": "pong"}
 ```
+
+5. 퀴즈 결과 저장 및 조회 테스트
+
+`backend/quiz_results.db` 파일은 서버 시작 시 자동으로 생성됩니다.
+
+- 저장 테스트
+
+```powershell
+curl -X POST http://127.0.0.1:8000/api/quiz-results -H "Content-Type: application/json" -d "{
+  \"nickname\": \"tester\",
+  \"score\": 85,
+  \"correct_count\": 17,
+  \"total_questions\": 20,
+  \"category\": \"sample\",
+  \"difficulty\": \"medium\"
+}"
+```
+
+- 조회 테스트
+
+```powershell
+curl http://127.0.0.1:8000/api/quiz-results
+```
+
+- nickname으로 필터링 조회
+
+```powershell
+curl "http://127.0.0.1:8000/api/quiz-results?nickname=tester"
+```
+
+## API 문서
+
+Swagger UI에서 API를 테스트할 수 있습니다.
+
+```
+http://127.0.0.1:8000/docs
+```
+
+Swagger UI에서 GET /api/quiz-results 엔드포인트를 펼치면 nickname 쿼리 파라미터 입력칸이 표시됩니다.
