@@ -570,17 +570,22 @@ function renderList(frame) {
     `;
     chain.appendChild(node);
 
-    const arrow = document.createElement('span');
-    arrow.className = 'list-arrow';
-    chain.appendChild(arrow);
+    if (index < frame.state.length - 1) {
+      const arrow = document.createElement('span');
+      arrow.className = 'list-arrow';
+      chain.appendChild(arrow);
+    }
   });
+
+  const arrow = document.createElement('span');
+  arrow.className = 'list-arrow';
+  chain.appendChild(arrow);
 
   const nullNode = document.createElement('span');
   nullNode.className = 'null-pill';
   nullNode.textContent = 'NULL';
-  chain.appendChild(nullNode);
-
   outer.appendChild(chain);
+  outer.appendChild(nullNode);
   visualStage.appendChild(outer);
 }
 

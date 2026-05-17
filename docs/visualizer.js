@@ -594,6 +594,8 @@ function renderList() {
 
     const view = document.createElement('div');
     view.className = 'list-view';
+    const chain = document.createElement('div');
+    chain.className = 'list-chain';
 
     state.list.forEach((value, index) => {
         const node = document.createElement('div');
@@ -602,16 +604,19 @@ function renderList() {
 
         node.innerHTML = `
             <div class="list-data">${value}</div>
-            <div class="list-next">next</div>
+            <div class="list-next"><span class="next-dot"></span></div>
         `;
 
-        view.appendChild(node);
+        chain.appendChild(node);
 
-        const arrow = document.createElement('span');
-        arrow.className = 'arrow';
-        arrow.textContent = '→';
-        view.appendChild(arrow);
+        if (index < state.list.length - 1) {
+            const arrow = document.createElement('span');
+            arrow.className = 'list-arrow';
+            chain.appendChild(arrow);
+        }
     });
+
+    view.appendChild(chain);
 
     const nullBox = document.createElement('span');
     nullBox.className = 'null-box';
