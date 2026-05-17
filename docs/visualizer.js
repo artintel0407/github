@@ -616,6 +616,10 @@ function renderList() {
         }
     });
 
+    const arrow = document.createElement('span');
+    arrow.className = 'list-arrow';
+    chain.appendChild(arrow);
+
     view.appendChild(chain);
 
     const nullBox = document.createElement('span');

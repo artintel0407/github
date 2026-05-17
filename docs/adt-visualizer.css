@@ -419,6 +419,9 @@ textarea:focus {
   font-size: 18px;
   font-weight: 900;
   color: #222;
+  border: none;
+  box-shadow: none;
+  outline: none;
 }
 
 .list-next {
