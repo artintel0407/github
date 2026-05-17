@@ -1061,11 +1061,16 @@ const scorePill = document.getElementById("scorePill");
 const answerFeedback = document.getElementById("answerFeedback");
 
 const resultSummary = document.getElementById("resultSummary");
+const categoryResults = document.getElementById("categoryResults");
+const absentCategories = document.getElementById("absentCategories");
 const feedbackMessage = document.getElementById("feedbackMessage");
 const resultBadge = document.getElementById("resultBadge");
 
+const reconditionBtn = document.getElementById("reconditionBtn");
+
 document.getElementById("startBtn").addEventListener("click", startQuiz);
-document.getElementById("retryBtn").addEventListener("click", resetQuiz);
+document.getElementById("retryBtn").addEventListener("click", startQuiz);
+reconditionBtn.addEventListener("click", resetQuiz);
 nextBtn.addEventListener("click", nextQuestion);
 categorySelect.addEventListener("change", updateSetupMessage);
 difficultySelect.addEventListener("change", updateSetupMessage);
@@ -1265,51 +1270,111 @@ function showResults() {
     showScreen(resultScreen);
     const total = selectedQuestions.length;
     const accuracy = Math.round((score / total) * 100);
+    const categoryData = Object.entries(stats)
+        .filter(([, value]) => value.total > 0)
+        .map(([category, value]) => ({
+            category,
+            total: value.total,
+            correct: value.correct,
+            rate: Math.round((value.correct / value.total) * 100)
+        }));
 
-    resultSummary.textContent =
-        `총 ${total}문제 중 ${score}문제 정답`;
+    const absentCategoryNames = Object.keys(stats)
+        .filter(key => stats[key].total === 0);
+
+    resultSummary.innerHTML = `
+        <div class="result-summary-card">
+            <div class="result-card-header">
+                <div>
+                    <p class="result-card-label">최종 결과</p>
+                    <h3>${score} / ${total} 문제 정답</h3>
+                </div>
+                <span class="result-badge">${accuracy}%</span>
+            </div>
+
+            <div class="result-score">
+                <strong>${accuracy}%</strong>
+                <span>${score === total ? "만점입니다! 축하합니다." : getScoreFeedback(accuracy)}</span>
+            </div>
+
+            <div class="metric-row">
+                <div class="metric-item">
+                    <span>정답 개수</span>
+                    <strong>${score}개</strong>
+                </div>
+                <div class="metric-item">
+                    <span>전체 문제</span>
+                    <strong>${total}개</strong>
+                </div>
+                <div class="metric-item">
+                    <span>평가</span>
+                    <strong>${getScoreLabel(accuracy)}</strong>
+                </div>
+            </div>
+
+            <p class="result-summary-note">
+                ${score === total ? "완벽합니다. 선택한 범위의 핵심 개념을 잘 이해했습니다." : "틀린 문제를 중심으로 약점을 보완하면 더 안정적인 이해가 가능합니다."}
+            </p>
+        </div>`;
+
+    categoryResults.innerHTML = categoryData.map(item => `
+        <div class="category-card">
+            <div>
+                <p class="category-name">${item.category}</p>
+                <p class="category-meta">${item.total}문제 · ${item.correct}개 정답</p>
+            </div>
+            <div class="category-rate">
+                <strong>${item.rate}%</strong>
+                <span>${item.total}문제 중 ${item.correct}개</span>
+            </div>
+        </div>
+    `).join("");
+
+    absentCategories.textContent = absentCategoryNames.length > 0
+        ? `이번 퀴즈에 출제되지 않은 카테고리: ${absentCategoryNames.join(", ")}`
+        : "";
+
     resultBadge.textContent = `${accuracy}%`;
 
     if (score === total) {
+        feedbackMessage.hidden = true;
+        feedbackMessage.textContent = "";
+        feedbackMessage.className = "feedback-box";
+    } else {
+        let weakestCategories = [];
+        let lowestRate = 101;
+        const reliableMinimum = 2;
+        const eligibleStats = Object.entries(stats)
+            .filter(([, value]) => value.total >= reliableMinimum);
+        const targetStats = eligibleStats.length > 0
+            ? eligibleStats
+            : Object.entries(stats).filter(([, value]) => value.total > 0);
+
+        targetStats.forEach(([key, value]) => {
+            const rate = (value.correct / value.total) * 100;
+
+            if (rate < lowestRate) {
+                lowestRate = rate;
+                weakestCategories = [key];
+            } else if (rate === lowestRate) {
+                weakestCategories.push(key);
+            }
+        });
+
+        const weakText = weakestCategories.length > 0
+            ? weakestCategories.join(", ")
+            : "특정 분야";
+        const sampleNote = eligibleStats.length > 0
+            ? ""
+            : " 다만 카테고리별 문제 수가 적어 약점 분야는 참고용으로만 보세요.";
+
         feedbackMessage.textContent =
-            "완벽합니다. 선택한 범위의 핵심 개념을 잘 이해했습니다.";
-        feedbackMessage.className = "feedback-box correct";
-        drawChart();
-        return;
+            `${getScoreFeedback(accuracy)} 틀린 문제가 있어 ${weakText} 분야를 한 번 더 확인하면 좋습니다.${sampleNote}`;
+        feedbackMessage.className = "feedback-box warning";
+        feedbackMessage.hidden = false;
     }
 
-    let weakestCategories = [];
-    let lowestRate = 101;
-    const reliableMinimum = 2;
-    const eligibleStats = Object.entries(stats)
-        .filter(([, value]) => value.total >= reliableMinimum);
-    const targetStats = eligibleStats.length > 0
-        ? eligibleStats
-        : Object.entries(stats).filter(([, value]) => value.total > 0);
-
-    targetStats.forEach(([key, value]) => {
-        const rate = (value.correct / value.total) * 100;
-
-        if (rate < lowestRate) {
-            lowestRate = rate;
-            weakestCategories = [key];
-        } else if (rate === lowestRate) {
-            weakestCategories.push(key);
-        }
-    });
-
-    const weakText = weakestCategories.length > 0
-        ? weakestCategories.join(", ")
-        : "특정 분야";
-    const sampleNote = eligibleStats.length > 0
-        ? ""
-        : " 다만 카테고리별 문제 수가 적어 약점 분야는 참고용으로만 보세요.";
-
-    feedbackMessage.textContent =
-        `${getScoreFeedback(accuracy)} 틀린 문제가 있어 ${weakText} 분야를 한 번 더 확인하면 좋습니다.${sampleNote}`;
-    feedbackMessage.className = "feedback-box warning";
-
-    drawChart();
+    drawChart(categoryData);
 }
 
 function getScoreFeedback(accuracy) {
@@ -1328,7 +1393,23 @@ function getScoreFeedback(accuracy) {
     return "기초 개념부터 차근차근 복습하는 것을 추천합니다.";
 }
 
-function drawChart() {
+function getScoreLabel(accuracy) {
+    if (accuracy === 100) {
+        return "만점";
+    }
+    if (accuracy >= 85) {
+        return "우수";
+    }
+    if (accuracy >= 65) {
+        return "양호";
+    }
+    if (accuracy >= 40) {
+        return "보통";
+    }
+    return "복습 필요";
+}
+
+function drawChart(categoryData) {
     const ctx = document.getElementById("resultChart");
 
     if (typeof Chart === "undefined") {
@@ -1339,22 +1420,56 @@ function drawChart() {
         chartInstance.destroy();
     }
 
+    const chartLabels = categoryData.map(item => item.category);
+    const chartValues = categoryData.map(item => item.rate);
+
     chartInstance = new Chart(ctx, {
         type: "bar",
         data: {
-            labels: Object.keys(stats),
+            labels: chartLabels,
             datasets: [{
                 label: "정답률 (%)",
-                data: Object.keys(stats).map(key => {
-                    if (stats[key].total === 0) return 0;
-                    return Math.round(
-                        (stats[key].correct / stats[key].total) * 100
-                    );
-                })
+                data: chartValues,
+                backgroundColor: chartValues.map(rate => rate === 100 ? "#4f46e5" : "#2563eb"),
+                borderRadius: 12,
+                maxBarThickness: 44
             }]
         },
         options: {
-            responsive: true
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: context => `${context.formattedValue}%`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: "#475569",
+                        font: { size: 13, weight: "700" }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        color: "#475569",
+                        font: { size: 12 },
+                        callback: value => `${value}%`
+                    },
+                    grid: {
+                        color: "rgba(148, 163, 184, 0.12)"
+                    }
+                }
+            }
         }
     });
 }

@@ -114,16 +114,27 @@
                 <span class="step-badge" id="resultBadge">Done</span>
             </div>
 
-            <div class="result-summary" id="resultSummary"></div>
+            <div id="resultSummary" class="result-summary"></div>
 
-            <div class="chart-box">
+            <section class="category-panel">
+                <div class="panel-header small">
+                    <p class="panel-label">카테고리별 결과</p>
+                    <p class="panel-note">출제된 카테고리만 표시됩니다.</p>
+                </div>
+                <div id="categoryResults" class="category-list"></div>
+                <p id="absentCategories" class="absent-note"></p>
+            </section>
+
+            <div class="chart-box secondary-chart">
+                <p class="section-title">카테고리 정답률</p>
                 <canvas id="resultChart"></canvas>
             </div>
 
-            <div class="feedback-box" id="feedbackMessage"></div>
+            <div class="feedback-box" id="feedbackMessage" hidden></div>
 
             <div class="button-row">
-                <button class="primary-btn" id="retryBtn" type="button">다시하기</button>
+                <button class="primary-btn" id="retryBtn" type="button">다시 풀기</button>
+                <button class="secondary-btn" id="reconditionBtn" type="button">다른 조건으로 풀기</button>
             </div>
         </section>
     </main>
