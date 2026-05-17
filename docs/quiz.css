@@ -370,6 +370,72 @@
     color: #999;
 }
 
+.record-list-container {
+    margin-top: 18px;
+}
+
+.record-history {
+    display: grid;
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.record-card {
+    display: grid;
+    gap: 12px;
+    padding: 18px;
+    border-radius: 18px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.record-card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+}
+
+.record-card-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.record-card-meta {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.record-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.record-card-item {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.record-card-item span {
+    display: block;
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.record-card-item strong {
+    display: block;
+    font-size: 16px;
+    color: #111827;
+}
+
+
 .absent-note {
     margin-top: 16px;
     color: #4b5563;

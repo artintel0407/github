@@ -1072,6 +1072,7 @@ document.getElementById("startBtn").addEventListener("click", startQuiz);
 document.getElementById("retryBtn").addEventListener("click", startQuiz);
 reconditionBtn.addEventListener("click", resetQuiz);
 document.getElementById("saveResultBtn").addEventListener("click", saveQuizResult);
+document.getElementById("viewRecordsBtn").addEventListener("click", fetchQuizRecords);
 nextBtn.addEventListener("click", nextQuestion);
 categorySelect.addEventListener("change", updateSetupMessage);
 difficultySelect.addEventListener("change", updateSetupMessage);
@@ -1437,15 +1438,80 @@ async function saveQuizResult() {
         saveMessage.className = "feedback-box correct";
         saveMessage.hidden = false;
 
-        // 저장 성공 후 입력 필드 비우기
-        nicknameInput.value = "";
-        document.getElementById("saveResultBtn").disabled = true;
-
     } catch (error) {
         console.error("저장 중 오류 발생:", error);
         saveMessage.textContent = `⚠ 저장 실패: ${error.message}. 백엔드 서버가 실행 중인지 확인하세요.`;
         saveMessage.className = "feedback-box wrong";
         saveMessage.hidden = false;
+    }
+}
+
+async function fetchQuizRecords() {
+    const nicknameInput = document.getElementById("nicknameInput");
+    const recordMessage = document.getElementById("recordMessage");
+    const recordHistory = document.getElementById("recordHistory");
+    const nickname = nicknameInput.value.trim();
+
+    recordHistory.innerHTML = "";
+    recordMessage.hidden = true;
+
+    if (!nickname) {
+        recordMessage.textContent = "닉네임을 입력하세요.";
+        recordMessage.className = "feedback-box wrong";
+        recordMessage.hidden = false;
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/quiz-results?nickname=${encodeURIComponent(nickname)}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const records = await response.json();
+
+        if (!Array.isArray(records) || records.length === 0) {
+            recordMessage.textContent = "저장된 기록이 없습니다.";
+            recordMessage.className = "feedback-box warning";
+            recordMessage.hidden = false;
+            return;
+        }
+
+        recordHistory.innerHTML = records.map(record => {
+            const dateText = new Date(record.created_at).toLocaleString("ko-KR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+
+            return `
+                <div class="record-card">
+                    <div class="record-card-header">
+                        <p class="record-card-title">${dateText}</p>
+                        <p class="record-card-meta">${record.category} · ${record.difficulty}</p>
+                    </div>
+                    <div class="record-card-grid">
+                        <div class="record-card-item">
+                            <span>점수</span>
+                            <strong>${record.score}</strong>
+                        </div>
+                        <div class="record-card-item">
+                            <span>정답</span>
+                            <strong>${record.correct_count} / ${record.total_questions}</strong>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("기록 조회 중 오류 발생:", error);
+        recordMessage.textContent = `⚠ 기록 조회 실패: ${error.message}. 백엔드 서버가 실행 중인지 확인하세요.`;
+        recordMessage.className = "feedback-box wrong";
+        recordMessage.hidden = false;
     }
 }
 
