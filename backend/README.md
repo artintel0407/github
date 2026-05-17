@@ -67,6 +67,12 @@ curl http://127.0.0.1:8000/api/quiz-results
 curl "http://127.0.0.1:8000/api/quiz-results?nickname=tester"
 ```
 
+- 닉네임별 통계 조회
+
+```powershell
+curl "http://127.0.0.1:8000/api/quiz-stats?nickname=tester"
+```
+
 ## API 문서
 
 Swagger UI에서 API를 테스트할 수 있습니다.

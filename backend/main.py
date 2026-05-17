@@ -23,6 +23,24 @@ class QuizResult(QuizResultCreate):
     id: int
     created_at: str
 
+class CategoryStats(BaseModel):
+    category: str
+    attempts: int
+    average_score: float
+    total_correct: int
+    total_questions: int
+    accuracy: float
+
+class QuizStats(BaseModel):
+    nickname: str
+    total_attempts: int
+    average_score: float
+    best_score: int
+    total_correct: int
+    total_questions: int
+    overall_accuracy: float
+    category_stats: List[CategoryStats]
+
 app = FastAPI(title="GitHub Project Backend", version="0.1.0")
 
 origins = ["*"]
@@ -107,6 +125,75 @@ async def create_quiz_result(payload: QuizResultCreate):
         ).fetchone()
 
     return row_to_quiz_result(row)
+
+
+@app.get("/api/quiz-stats", response_model=QuizStats)
+async def get_quiz_stats(nickname: str):
+    with get_db_connection() as conn:
+        rows = conn.execute(
+            "SELECT * FROM quiz_results WHERE nickname = ? ORDER BY created_at DESC",
+            (nickname,),
+        ).fetchall()
+
+    if not rows:
+        return QuizStats(
+            nickname=nickname,
+            total_attempts=0,
+            average_score=0.0,
+            best_score=0,
+            total_correct=0,
+            total_questions=0,
+            overall_accuracy=0.0,
+            category_stats=[],
+        )
+
+    total_attempts = len(rows)
+    total_score = sum(row["score"] for row in rows)
+    best_score = max(row["score"] for row in rows)
+    total_correct = sum(row["correct_count"] for row in rows)
+    total_questions = sum(row["total_questions"] for row in rows)
+    overall_accuracy = round((total_correct / total_questions) * 100, 2) if total_questions else 0.0
+
+    category_map = {}
+    for row in rows:
+        category = row["category"]
+        if category not in category_map:
+            category_map[category] = {
+                "attempts": 0,
+                "total_score": 0,
+                "total_correct": 0,
+                "total_questions": 0,
+            }
+
+        category_map[category]["attempts"] += 1
+        category_map[category]["total_score"] += row["score"]
+        category_map[category]["total_correct"] += row["correct_count"]
+        category_map[category]["total_questions"] += row["total_questions"]
+
+    category_stats = []
+    for category, data in category_map.items():
+        attempts = data["attempts"]
+        total_correct_cat = data["total_correct"]
+        total_questions_cat = data["total_questions"]
+        category_stats.append(CategoryStats(
+            category=category,
+            attempts=attempts,
+            average_score=round(data["total_score"] / attempts, 2) if attempts else 0.0,
+            total_correct=total_correct_cat,
+            total_questions=total_questions_cat,
+            accuracy=round((total_correct_cat / total_questions_cat) * 100, 2) if total_questions_cat else 0.0,
+        ))
+
+    return QuizStats(
+        nickname=nickname,
+        total_attempts=total_attempts,
+        average_score=round(total_score / total_attempts, 2),
+        best_score=best_score,
+        total_correct=total_correct,
+        total_questions=total_questions,
+        overall_accuracy=overall_accuracy,
+        category_stats=category_stats,
+    )
 
 
 @app.get("/api/quiz-results", response_model=List[QuizResult])

@@ -1449,9 +1449,11 @@ async function saveQuizResult() {
 async function fetchQuizRecords() {
     const nicknameInput = document.getElementById("nicknameInput");
     const recordMessage = document.getElementById("recordMessage");
+    const recordStats = document.getElementById("recordStats");
     const recordHistory = document.getElementById("recordHistory");
     const nickname = nicknameInput.value.trim();
 
+    recordStats.innerHTML = "";
     recordHistory.innerHTML = "";
     recordMessage.hidden = true;
 
@@ -1463,13 +1465,17 @@ async function fetchQuizRecords() {
     }
 
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/quiz-results?nickname=${encodeURIComponent(nickname)}`);
+        const [statsResponse, recordsResponse] = await Promise.all([
+            fetch(`http://127.0.0.1:8000/api/quiz-stats?nickname=${encodeURIComponent(nickname)}`),
+            fetch(`http://127.0.0.1:8000/api/quiz-results?nickname=${encodeURIComponent(nickname)}`)
+        ]);
 
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
+        if (!statsResponse.ok || !recordsResponse.ok) {
+            throw new Error(`HTTP ${statsResponse.status || recordsResponse.status}`);
         }
 
-        const records = await response.json();
+        const stats = await statsResponse.json();
+        const records = await recordsResponse.json();
 
         if (!Array.isArray(records) || records.length === 0) {
             recordMessage.textContent = "저장된 기록이 없습니다.";
@@ -1477,6 +1483,51 @@ async function fetchQuizRecords() {
             recordMessage.hidden = false;
             return;
         }
+
+        recordStats.innerHTML = `
+            <div class="record-stats-card">
+                <div class="record-stats-header">
+                    <h3 class="record-stats-title">내 퀴즈 통계</h3>
+                    <p class="record-stats-meta">닉네임: ${stats.nickname}</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <span>도전 횟수</span>
+                        <strong>${stats.total_attempts}</strong>
+                    </div>
+                    <div class="stats-card">
+                        <span>평균 점수</span>
+                        <strong>${stats.average_score}</strong>
+                    </div>
+                    <div class="stats-card">
+                        <span>최고 점수</span>
+                        <strong>${stats.best_score}</strong>
+                    </div>
+                    <div class="stats-card">
+                        <span>전체 정확도</span>
+                        <strong>${stats.overall_accuracy}%</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="category-stats-card">
+                <div class="record-stats-header">
+                    <h3 class="category-stats-title">카테고리별 통계</h3>
+                    <p class="record-stats-meta">시도한 범위별 평균 점수와 정확도</p>
+                </div>
+                <div class="category-grid">
+                    ${stats.category_stats.map(category => `
+                        <div class="category-card">
+                            <p class="category-card-title">${category.category}</p>
+                            <p class="category-card-meta">${category.attempts}회 · 정확도 ${category.accuracy}%</p>
+                            <span>평균 점수</span>
+                            <strong>${category.average_score}</strong>
+                            <span>정답</span>
+                            <strong>${category.total_correct} / ${category.total_questions}</strong>
+                        </div>
+                    `).join("")}
+                </div>
+            </div>
+        `;
 
         recordHistory.innerHTML = records.map(record => {
             const dateText = new Date(record.created_at).toLocaleString("ko-KR", {
