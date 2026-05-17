@@ -132,8 +132,26 @@
 
             <div class="feedback-box" id="feedbackMessage" hidden></div>
 
+            <section class="save-result-panel">
+                <div class="panel-header small">
+                    <p class="panel-label">결과 저장</p>
+                    <p class="panel-note">백엔드에 결과를 저장하려면 닉네임을 입력하세요.</p>
+                </div>
+
+                <label class="save-field">
+                    <span>닉네임</span>
+                    <input type="text" id="nicknameInput" placeholder="6자 이상 20자 이하">
+                </label>
+
+                <div class="feedback-box" id="saveMessage" hidden></div>
+
+                <div class="button-row">
+                    <button class="primary-btn" id="saveResultBtn" type="button">결과 저장하기</button>
+                </div>
+            </section>
+
             <div class="button-row">
-                <button class="primary-btn" id="retryBtn" type="button">다시 풀기</button>
+                <button class="secondary-btn" id="retryBtn" type="button">다시 풀기</button>
                 <button class="secondary-btn" id="reconditionBtn" type="button">다른 조건으로 풀기</button>
             </div>
         </section>

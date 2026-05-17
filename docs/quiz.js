@@ -1071,6 +1071,7 @@ const reconditionBtn = document.getElementById("reconditionBtn");
 document.getElementById("startBtn").addEventListener("click", startQuiz);
 document.getElementById("retryBtn").addEventListener("click", startQuiz);
 reconditionBtn.addEventListener("click", resetQuiz);
+document.getElementById("saveResultBtn").addEventListener("click", saveQuizResult);
 nextBtn.addEventListener("click", nextQuestion);
 categorySelect.addEventListener("change", updateSetupMessage);
 difficultySelect.addEventListener("change", updateSetupMessage);
@@ -1375,6 +1376,77 @@ function showResults() {
     }
 
     drawChart(categoryData);
+
+    // 닉네임 입력 필드 초기화
+    document.getElementById("nicknameInput").value = "";
+    document.getElementById("saveMessage").hidden = true;
+}
+
+async function saveQuizResult() {
+    const nicknameInput = document.getElementById("nicknameInput");
+    const saveMessage = document.getElementById("saveMessage");
+    const nickname = nicknameInput.value.trim();
+
+    // 닉네임 유효성 검사
+    if (!nickname) {
+        saveMessage.textContent = "닉네임을 입력하세요.";
+        saveMessage.className = "feedback-box wrong";
+        saveMessage.hidden = false;
+        return;
+    }
+
+    if (nickname.length < 6 || nickname.length > 20) {
+        saveMessage.textContent = "닉네임은 6자 이상 20자 이하여야 합니다.";
+        saveMessage.className = "feedback-box wrong";
+        saveMessage.hidden = false;
+        return;
+    }
+
+    // 카테고리 결정 (all인 경우 "all"로 저장, 그 외는 선택값)
+    const selectedCategoryValue = categorySelect.value;
+    const category = selectedCategoryValue === "all" ? "all" : selectedCategoryValue;
+
+    // 저장할 데이터 구성
+    const quizData = {
+        nickname: nickname,
+        score: score,
+        correct_count: score,
+        total_questions: selectedQuestions.length,
+        category: category,
+        difficulty: difficultySelect.value
+    };
+
+    try {
+        // 백엔드 API 호출
+        const response = await fetch("http://127.0.0.1:8000/api/quiz-results", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(quizData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        // 성공 메시지 표시
+        saveMessage.textContent = `✓ 결과가 저장되었습니다! (ID: ${result.id})`;
+        saveMessage.className = "feedback-box correct";
+        saveMessage.hidden = false;
+
+        // 저장 성공 후 입력 필드 비우기
+        nicknameInput.value = "";
+        document.getElementById("saveResultBtn").disabled = true;
+
+    } catch (error) {
+        console.error("저장 중 오류 발생:", error);
+        saveMessage.textContent = `⚠ 저장 실패: ${error.message}. 백엔드 서버가 실행 중인지 확인하세요.`;
+        saveMessage.className = "feedback-box wrong";
+        saveMessage.hidden = false;
+    }
 }
 
 function getScoreFeedback(accuracy) {

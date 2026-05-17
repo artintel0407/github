@@ -330,6 +330,46 @@
     font-size: 13px;
 }
 
+.save-result-panel {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 24px;
+}
+
+.save-field {
+    display: grid;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.save-field span {
+    font-weight: 800;
+    color: #444;
+}
+
+.save-field input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #d7dbe0;
+    background: white;
+    color: #222;
+    font-size: 15px;
+    font-family: inherit;
+}
+
+.save-field input:focus {
+    outline: none;
+    border-color: #3182f6;
+    box-shadow: 0 0 0 4px rgba(49, 130, 246, 0.12);
+}
+
+.save-field input::placeholder {
+    color: #999;
+}
+
 .absent-note {
     margin-top: 16px;
     color: #4b5563;
