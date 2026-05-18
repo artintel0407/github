@@ -5,7 +5,7 @@ from typing import List
 
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -210,3 +210,27 @@ async def list_quiz_results(nickname: Optional[str] = None):
             ).fetchall()
 
     return [row_to_quiz_result(row) for row in rows]
+
+
+@app.delete("/api/quiz-results/{result_id}")
+async def delete_quiz_result(result_id: int):
+    enabled = os.getenv("ENABLE_DELETE", "false").lower() == "true"
+    if not enabled:
+        raise HTTPException(status_code=403, detail="Delete functionality is disabled.")
+
+    with get_db_connection() as conn:
+        row = conn.execute(
+            "SELECT * FROM quiz_results WHERE id = ?",
+            (result_id,),
+        ).fetchone()
+
+        if not row:
+            raise HTTPException(status_code=404, detail="Quiz result not found.")
+
+        conn.execute(
+            "DELETE FROM quiz_results WHERE id = ?",
+            (result_id,),
+        )
+        conn.commit()
+
+    return {"id": result_id, "message": "Quiz result deleted successfully."}

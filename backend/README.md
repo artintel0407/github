@@ -73,6 +73,28 @@ curl "http://127.0.0.1:8000/api/quiz-results?nickname=tester"
 curl "http://127.0.0.1:8000/api/quiz-stats?nickname=tester"
 ```
 
+- 삭제 기능 (개발/관리용)
+
+기본 상태에서는 비활성화되어 있으며, `ENABLE_DELETE=true` 환경변수를 설정한 경우에만 사용할 수 있습니다.
+
+```powershell
+# Windows PowerShell
+$env:ENABLE_DELETE = "true"
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# macOS / Linux
+export ENABLE_DELETE=true
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+삭제 테스트 예시:
+
+```powershell
+curl -X DELETE http://127.0.0.1:8000/api/quiz-results/1
+```
+
+Render 배포 환경에서는 기본적으로 `ENABLE_DELETE`를 설정하지 않으므로 삭제 기능이 차단됩니다.
+
 ## API 문서
 
 Swagger UI에서 API를 테스트할 수 있습니다.
