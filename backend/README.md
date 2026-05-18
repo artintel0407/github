@@ -24,6 +24,18 @@ pip install -r requirements.txt
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+### PostgreSQL 환경에서 실행
+
+Render와 같은 배포 환경에서는 `DATABASE_URL` 환경변수가 설정되면 PostgreSQL을 사용합니다.
+로컬에서는 `DATABASE_URL`이 없으면 기존처럼 `backend/quiz_results.db` SQLite 파일을 사용합니다.
+
+```powershell
+$env:DATABASE_URL = "postgres://user:password@host:port/dbname"
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+테이블이 없으면 서버 시작 시 `quiz_results` 테이블이 자동으로 생성됩니다.
+
 4. 서버 확인
 
 브라우저 또는 curl로 다음 엔드포인트를 확인합니다.
@@ -101,6 +113,15 @@ Swagger UI에서 API를 테스트할 수 있습니다.
 
 ```
 http://127.0.0.1:8000/docs
+```
+
+## Render 배포 테스트
+
+1. Render 서비스의 환경 변수에 `DATABASE_URL`을 추가합니다.
+2. 배포를 실행하면 `DATABASE_URL`이 감지되어 PostgreSQL을 사용합니다.
+3. `GET /api/ping`, `POST /api/quiz-results`, `GET /api/quiz-results`, `GET /api/quiz-results?nickname=...`, `GET /api/quiz-stats?nickname=...`, `DELETE /api/quiz-results/{result_id}`가 기존대로 동작하는지 확인합니다.
+
+Render에서 삭제 기능을 테스트하려면 `ENABLE_DELETE=true` 환경변수를 추가해야 합니다.
 ```
 
 Swagger UI에서 GET /api/quiz-results 엔드포인트를 펼치면 nickname 쿼리 파라미터 입력칸이 표시됩니다.
