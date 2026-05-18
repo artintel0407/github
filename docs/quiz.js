@@ -1065,14 +1065,19 @@ const categoryResults = document.getElementById("categoryResults");
 const absentCategories = document.getElementById("absentCategories");
 const feedbackMessage = document.getElementById("feedbackMessage");
 const resultBadge = document.getElementById("resultBadge");
+const resultStatusMessage = document.getElementById("resultStatusMessage");
 
 const reconditionBtn = document.getElementById("reconditionBtn");
+const setupViewRecordsBtn = document.getElementById("setupViewRecordsBtn");
 
 document.getElementById("startBtn").addEventListener("click", startQuiz);
 document.getElementById("retryBtn").addEventListener("click", startQuiz);
 reconditionBtn.addEventListener("click", resetQuiz);
 document.getElementById("saveResultBtn").addEventListener("click", saveQuizResult);
-document.getElementById("viewRecordsBtn").addEventListener("click", fetchQuizRecords);
+document.getElementById("viewRecordsBtn").addEventListener("click", () => fetchQuizRecords());
+if (setupViewRecordsBtn) {
+    setupViewRecordsBtn.addEventListener("click", () => fetchQuizRecords("setup"));
+}
 nextBtn.addEventListener("click", nextQuestion);
 categorySelect.addEventListener("change", updateSetupMessage);
 difficultySelect.addEventListener("change", updateSetupMessage);
@@ -1380,26 +1385,21 @@ function showResults() {
 
     // 닉네임 입력 필드 초기화
     document.getElementById("nicknameInput").value = "";
-    document.getElementById("saveMessage").hidden = true;
+    resultStatusMessage.hidden = true;
 }
 
 async function saveQuizResult() {
     const nicknameInput = document.getElementById("nicknameInput");
-    const saveMessage = document.getElementById("saveMessage");
     const nickname = nicknameInput.value.trim();
 
     // 닉네임 유효성 검사
     if (!nickname) {
-        saveMessage.textContent = "닉네임을 입력하세요.";
-        saveMessage.className = "feedback-box wrong";
-        saveMessage.hidden = false;
+        setStatusMessage(resultStatusMessage, "닉네임을 입력하세요.", "wrong");
         return;
     }
 
     if (nickname.length < 6 || nickname.length > 20) {
-        saveMessage.textContent = "닉네임은 6자 이상 20자 이하여야 합니다.";
-        saveMessage.className = "feedback-box wrong";
-        saveMessage.hidden = false;
+        setStatusMessage(resultStatusMessage, "닉네임은 6자 이상 20자 이하여야 합니다.", "wrong");
         return;
     }
 
@@ -1434,57 +1434,39 @@ async function saveQuizResult() {
         const result = await response.json();
 
         // 성공 메시지 표시
-        saveMessage.textContent = `✓ 결과가 저장되었습니다! (ID: ${result.id})`;
-        saveMessage.className = "feedback-box correct";
-        saveMessage.hidden = false;
+        setStatusMessage(resultStatusMessage, `✓ 결과가 저장되었습니다! (ID: ${result.id})`, "correct");
+
+        // 저장 후 동일 닉네임으로 최신 기록을 자동 갱신합니다.
+        await fetchQuizRecords("", { keepStatusOnSuccess: true });
 
     } catch (error) {
         console.error("저장 중 오류 발생:", error);
-        saveMessage.textContent = `⚠ 저장 실패: ${error.message}. 백엔드 서버가 실행 중인지 확인하세요.`;
-        saveMessage.className = "feedback-box wrong";
-        saveMessage.hidden = false;
+        setStatusMessage(resultStatusMessage, `⚠ 저장 실패: ${error.message}. 백엔드 서버가 실행 중인지 확인하세요.`, "wrong");
     }
 }
 
-async function fetchQuizRecords() {
-    const nicknameInput = document.getElementById("nicknameInput");
-    const recordMessage = document.getElementById("recordMessage");
-    const recordStats = document.getElementById("recordStats");
-    const recordHistory = document.getElementById("recordHistory");
-    const nickname = nicknameInput.value.trim();
-
-    recordStats.innerHTML = "";
-    recordHistory.innerHTML = "";
-    recordMessage.hidden = true;
-
-    if (!nickname) {
-        recordMessage.textContent = "닉네임을 입력하세요.";
-        recordMessage.className = "feedback-box wrong";
-        recordMessage.hidden = false;
-        return;
+function getRecordElements(prefix = "") {
+    if (!prefix) {
+        return {
+            nicknameInput: document.getElementById("nicknameInput"),
+            statusMessage: resultStatusMessage,
+            recordContainer: document.getElementById("recordContainer"),
+            recordStats: document.getElementById("recordStats"),
+            recordHistory: document.getElementById("recordHistory")
+        };
     }
 
-    try {
-        const [statsResponse, recordsResponse] = await Promise.all([
-            fetch(`http://127.0.0.1:8000/api/quiz-stats?nickname=${encodeURIComponent(nickname)}`),
-            fetch(`http://127.0.0.1:8000/api/quiz-results?nickname=${encodeURIComponent(nickname)}`)
-        ]);
+    return {
+        nicknameInput: document.getElementById(`${prefix}NicknameInput`),
+        statusMessage: document.getElementById(`${prefix}RecordMessage`),
+        recordContainer: document.getElementById(`${prefix}RecordContainer`),
+        recordStats: document.getElementById(`${prefix}RecordStats`),
+        recordHistory: document.getElementById(`${prefix}RecordHistory`)
+    };
+}
 
-        if (!statsResponse.ok || !recordsResponse.ok) {
-            throw new Error(`HTTP ${statsResponse.status || recordsResponse.status}`);
-        }
-
-        const stats = await statsResponse.json();
-        const records = await recordsResponse.json();
-
-        if (!Array.isArray(records) || records.length === 0) {
-            recordMessage.textContent = "저장된 기록이 없습니다.";
-            recordMessage.className = "feedback-box warning";
-            recordMessage.hidden = false;
-            return;
-        }
-
-        recordStats.innerHTML = `
+function renderRecordResults(recordStats, recordHistory, stats, records) {
+    recordStats.innerHTML = `
             <div class="record-stats-card">
                 <div class="record-stats-header">
                     <h3 class="record-stats-title">내 퀴즈 통계</h3>
@@ -1515,7 +1497,7 @@ async function fetchQuizRecords() {
                     <p class="record-stats-meta">시도한 범위별 평균 점수와 정확도</p>
                 </div>
                 <div class="category-grid">
-                    ${stats.category_stats.map(category => `
+                    ${Array.isArray(stats.category_stats) ? stats.category_stats.map(category => `
                         <div class="category-card">
                             <p class="category-card-title">${category.category}</p>
                             <p class="category-card-meta">${category.attempts}회 · 정확도 ${category.accuracy}%</p>
@@ -1524,21 +1506,21 @@ async function fetchQuizRecords() {
                             <span>정답</span>
                             <strong>${category.total_correct} / ${category.total_questions}</strong>
                         </div>
-                    `).join("")}
+                    `).join("") : ``}
                 </div>
             </div>
         `;
 
-        recordHistory.innerHTML = records.map(record => {
-            const dateText = new Date(record.created_at).toLocaleString("ko-KR", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit"
-            });
+    recordHistory.innerHTML = records.map(record => {
+        const dateText = new Date(record.created_at).toLocaleString("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
 
-            return `
+        return `
                 <div class="record-card">
                     <div class="record-card-header">
                         <p class="record-card-title">${dateText}</p>
@@ -1556,13 +1538,93 @@ async function fetchQuizRecords() {
                     </div>
                 </div>
             `;
-        }).join("");
+    }).join("");
+}
+
+function setStatusMessage(statusMessage, text, type = "wrong") {
+    if (!statusMessage) {
+        return;
+    }
+
+    statusMessage.textContent = text;
+    statusMessage.className = `feedback-box ${type}`;
+    statusMessage.hidden = false;
+}
+
+function hideStatusMessage(statusMessage) {
+    if (!statusMessage) {
+        return;
+    }
+
+    statusMessage.hidden = true;
+}
+
+async function fetchQuizRecords(prefix = "", options = {}) {
+    let nicknameInput;
+    let statusMessage;
+    let recordContainer;
+    let recordStats;
+    let recordHistory;
+
+    if (prefix === "setup") {
+        nicknameInput = document.getElementById("setupNicknameInput");
+        statusMessage = document.getElementById("setupRecordMessage");
+        recordContainer = document.getElementById("setupRecordContainer");
+        recordStats = document.getElementById("setupRecordStats");
+        recordHistory = document.getElementById("setupRecordHistory");
+    } else {
+        ({ nicknameInput, statusMessage, recordContainer, recordStats, recordHistory } = getRecordElements(prefix));
+    }
+
+    const nickname = nicknameInput ? nicknameInput.value.trim() : "";
+    const { showSuccessMessage = false, keepStatusOnSuccess = false } = options;
+
+    if (!statusMessage || !recordContainer || !recordStats || !recordHistory || !nicknameInput) {
+        return;
+    }
+
+    recordStats.innerHTML = "";
+    recordHistory.innerHTML = "";
+    recordContainer.hidden = true;
+    if (!keepStatusOnSuccess) {
+        hideStatusMessage(statusMessage);
+    }
+
+    if (!nickname) {
+        setStatusMessage(statusMessage, "닉네임을 입력하세요.", "wrong");
+        return;
+    }
+
+    try {
+        const [statsResponse, recordsResponse] = await Promise.all([
+            fetch(`http://127.0.0.1:8000/api/quiz-stats?nickname=${encodeURIComponent(nickname)}`),
+            fetch(`http://127.0.0.1:8000/api/quiz-results?nickname=${encodeURIComponent(nickname)}`)
+        ]);
+
+        if (!statsResponse.ok || !recordsResponse.ok) {
+            throw new Error(`HTTP ${statsResponse.status || recordsResponse.status}`);
+        }
+
+        const stats = await statsResponse.json();
+        const records = await recordsResponse.json();
+
+        if (!Array.isArray(records) || records.length === 0) {
+            setStatusMessage(statusMessage, "저장된 기록이 없습니다.", "warning");
+            return;
+        }
+
+        renderRecordResults(recordStats, recordHistory, stats, records);
+        recordContainer.hidden = false;
+
+        if (showSuccessMessage) {
+            setStatusMessage(statusMessage, "✓ 기록을 불러왔습니다.", "correct");
+        } else if (!keepStatusOnSuccess) {
+            hideStatusMessage(statusMessage);
+        }
 
     } catch (error) {
         console.error("기록 조회 중 오류 발생:", error);
-        recordMessage.textContent = `⚠ 기록 조회 실패: ${error.message}. 백엔드 서버가 실행 중인지 확인하세요.`;
-        recordMessage.className = "feedback-box wrong";
-        recordMessage.hidden = false;
+        setStatusMessage(statusMessage, `⚠ 기록 조회 실패: ${error.message}. 백엔드 서버가 실행 중인지 확인하세요.`, "wrong");
     }
 }
 

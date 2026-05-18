@@ -370,6 +370,14 @@
     color: #999;
 }
 
+.setup-record-panel {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 24px;
+}
+
 .record-list-container {
     margin-top: 18px;
 }

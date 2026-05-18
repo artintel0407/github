@@ -72,6 +72,23 @@
 
             <div class="button-row">
                 <button class="primary-btn" id="startBtn" type="button">퀴즈 시작</button>
+                <button class="secondary-btn" id="setupViewRecordsBtn" type="button">내 기록 보기</button>
+            </div>
+
+            <div class="save-result-panel setup-record-panel">
+                <div class="panel-header small">
+                    <p class="panel-label">기록 조회</p>
+                    <p class="panel-note">닉네임 입력 후 과거 퀴즈 기록과 통계를 확인하세요.</p>
+                </div>
+                <label class="save-field">
+                    <span>닉네임</span>
+                    <input type="text" id="setupNicknameInput" placeholder="6자 이상 20자 이하">
+                </label>
+                <div class="feedback-box" id="setupRecordMessage" hidden></div>
+                <div id="setupRecordContainer" class="record-list-container" hidden>
+                    <div id="setupRecordStats" class="record-stats"></div>
+                    <div id="setupRecordHistory" class="record-history"></div>
+                </div>
             </div>
         </section>
 
@@ -143,15 +160,14 @@
                     <input type="text" id="nicknameInput" placeholder="6자 이상 20자 이하">
                 </label>
 
-                <div class="feedback-box" id="saveMessage" hidden></div>
+                <div class="feedback-box" id="resultStatusMessage" hidden></div>
 
                 <div class="button-row">
                     <button class="primary-btn" id="saveResultBtn" type="button">결과 저장하기</button>
                     <button class="secondary-btn" id="viewRecordsBtn" type="button">내 기록 보기</button>
                 </div>
 
-                <div id="recordContainer" class="record-list-container">
-                    <div class="feedback-box" id="recordMessage" hidden></div>
+                <div id="recordContainer" class="record-list-container" hidden>
                     <div id="recordStats" class="record-stats"></div>
                     <div id="recordHistory" class="record-history"></div>
                 </div>
