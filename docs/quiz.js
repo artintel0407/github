@@ -1040,6 +1040,8 @@ const categoryMap = {
     tree: "Tree"
 };
 
+const API_BASE_URL = "https://github-ujp6.onrender.com";
+
 const setupScreen = document.getElementById("setupScreen");
 const quizScreen = document.getElementById("quizScreen");
 const resultScreen = document.getElementById("resultScreen");
@@ -1419,7 +1421,7 @@ async function saveQuizResult() {
 
     try {
         // 백엔드 API 호출
-        const response = await fetch("http://127.0.0.1:8000/api/quiz-results", {
+        const response = await fetch(`${API_BASE_URL}/api/quiz-results`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -1597,8 +1599,8 @@ async function fetchQuizRecords(prefix = "", options = {}) {
 
     try {
         const [statsResponse, recordsResponse] = await Promise.all([
-            fetch(`http://127.0.0.1:8000/api/quiz-stats?nickname=${encodeURIComponent(nickname)}`),
-            fetch(`http://127.0.0.1:8000/api/quiz-results?nickname=${encodeURIComponent(nickname)}`)
+            fetch(`${API_BASE_URL}/api/quiz-stats?nickname=${encodeURIComponent(nickname)}`),
+            fetch(`${API_BASE_URL}/api/quiz-results?nickname=${encodeURIComponent(nickname)}`)
         ]);
 
         if (!statsResponse.ok || !recordsResponse.ok) {

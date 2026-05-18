@@ -99,6 +99,7 @@ pip install -r requirements.txt
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-- 백엔드는 `http://127.0.0.1:8000`에서 실행됩니다.
-- API 문서는 `http://127.0.0.1:8000/docs`에서 확인하세요.
-- GitHub Pages에서는 프론트엔드만 배포되며, 백엔드 기능을 사용하려면 로컬 서버를 별도 실행해야 합니다.
+- 로컬 실행 시 백엔드는 `http://127.0.0.1:8000`에서 실행됩니다.
+- 배포된 백엔드는 `https://github-ujp6.onrender.com`입니다.
+- API 문서는 로컬 실행 시 `http://127.0.0.1:8000/docs`에서 확인하세요.
+- GitHub Pages에서는 프론트엔드만 배포되며, 백엔드 기능을 사용하려면 로컬 서버를 별도 실행하거나 배포된 백엔드를 사용해야 합니다.
