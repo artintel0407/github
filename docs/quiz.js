@@ -1467,6 +1467,37 @@ function getRecordElements(prefix = "") {
     };
 }
 
+function parseUtcDate(value) {
+    if (!value) {
+        return null;
+    }
+
+    const text = String(value).trim();
+    const hasTimezone = /(?:z|[+-]\d{2}:?\d{2})$/i.test(text);
+    const normalizedText = hasTimezone ? text : `${text}Z`;
+    const date = new Date(normalizedText);
+
+    return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function formatKstDateTime(value) {
+    const date = parseUtcDate(value);
+
+    if (!date) {
+        return "";
+    }
+
+    return new Intl.DateTimeFormat("ko-KR", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+    }).format(date);
+}
+
 function renderRecordResults(recordStats, recordHistory, stats, records) {
     recordStats.innerHTML = `
             <div class="record-stats-card">
@@ -1514,13 +1545,7 @@ function renderRecordResults(recordStats, recordHistory, stats, records) {
         `;
 
     recordHistory.innerHTML = records.map(record => {
-        const dateText = new Date(record.created_at).toLocaleString("ko-KR", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit"
-        });
+        const dateText = formatKstDateTime(record.created_at);
 
         return `
                 <div class="record-card">
