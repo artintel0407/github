@@ -19,6 +19,11 @@
             max-width: 1000px;
         }
 
+        .topbar {
+            justify-content: center;
+            margin-bottom: 34px;
+        }
+
         .title {
             text-align: center;
             font-size: 52px;
@@ -82,13 +87,20 @@
 <body>
 
     <div class="container">
+        <nav class="topbar" aria-label="주요 메뉴">
+            <a href="theory.html">Basic Theory</a>
+            <a href="stl.html">STL Visualizer</a>
+            <a href="visualizer.html">Visualizer</a>
+            <a href="adt-visualizer.html">Code Visualizer</a>
+            <a href="quiz.html">Quiz</a>
+        </nav>
 
         <div class="title">
             Data Structure Learning Platform
         </div>
 
         <div class="subtitle">
-            Review core concepts, try visualizers, and check your understanding with quizzes.
+            핵심 개념을 정리하고, 시각화와 퀴즈로 이해도를 확인해보세요.
         </div>
 
         <div class="grid">
@@ -96,15 +108,15 @@
                 <div class="card-title">Basic Theory</div>
 
                 <div class="card-description">
-                    Quick review notes for Array, Linked List, Stack, Queue, and Tree before practice.
+                    Array, Linked List, Stack, Queue, Tree의 정의와 주요 연산을 간단히 복습합니다.
                 </div>
             </a>
             
             <a href="stl.html" class="card">
-                <div class="card-title">STL</div>
+                <div class="card-title">STL Visualizer</div>
 
                 <div class="card-description">
-                    Choose a data structure and open the matching interactive visualizer.
+                    자료구조를 선택하고 각 구조의 동작을 시각적으로 확인합니다.
                 </div>
             </a>
 
@@ -112,14 +124,14 @@
                 <div class="card-title">Quiz</div>
 
                 <div class="card-description">
-                    Solve concept and reasoning questions by difficulty and topic.
+                    난이도와 주제를 선택해 개념 이해도를 점검합니다.
                 </div>
             </a>
 
             <a href="adt-visualizer.html" class="card">
                 <div class="card-title">Code Visualizer</div>
                 <div class="card-description">
-                    Run simple ADT commands and watch each operation update the structure.
+                    간단한 ADT 명령을 실행하며 연산 결과가 어떻게 반영되는지 확인합니다.
                 </div>
             </a>
 

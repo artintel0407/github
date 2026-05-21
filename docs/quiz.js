@@ -1066,7 +1066,6 @@ const resultSummary = document.getElementById("resultSummary");
 const categoryResults = document.getElementById("categoryResults");
 const absentCategories = document.getElementById("absentCategories");
 const feedbackMessage = document.getElementById("feedbackMessage");
-const resultBadge = document.getElementById("resultBadge");
 const resultStatusMessage = document.getElementById("resultStatusMessage");
 
 const reconditionBtn = document.getElementById("reconditionBtn");
@@ -1081,9 +1080,9 @@ if (setupViewRecordsBtn) {
     setupViewRecordsBtn.addEventListener("click", () => fetchQuizRecords("setup"));
 }
 nextBtn.addEventListener("click", nextQuestion);
-categorySelect.addEventListener("change", updateSetupMessage);
-difficultySelect.addEventListener("change", updateSetupMessage);
-countSelect.addEventListener("change", updateSetupMessage);
+categorySelect.addEventListener("change", handleSetupChange);
+difficultySelect.addEventListener("change", handleSetupChange);
+countSelect.addEventListener("change", handleSetupChange);
 
 function shuffleArray(array) {
     return [...array].sort(() => Math.random() - 0.5);
@@ -1148,6 +1147,11 @@ function updateSetupMessage() {
     setupMessage.className = "status-box";
 }
 
+function handleSetupChange() {
+    updateSetupMessage();
+    clearRecordResults("setup");
+}
+
 function applyCategoryFromUrl() {
     const params = new URLSearchParams(window.location.search);
     const category = (params.get("category") || "").toLowerCase();
@@ -1160,6 +1164,9 @@ function applyCategoryFromUrl() {
 }
 
 function startQuiz() {
+    clearRecordResults();
+    clearRecordResults("setup");
+
     const count = Number(countSelect.value);
     const filtered = getFilteredQuestions();
     const quizCount = Math.min(count, filtered.length);
@@ -1277,6 +1284,8 @@ function nextQuestion() {
 
 function showResults() {
     showScreen(resultScreen);
+    clearRecordResults();
+
     const total = selectedQuestions.length;
     const accuracy = Math.round((score / total) * 100);
     const categoryData = Object.entries(stats)
@@ -1298,12 +1307,10 @@ function showResults() {
                     <p class="result-card-label">최종 결과</p>
                     <h3>${score} / ${total} 문제 정답</h3>
                 </div>
-                <span class="result-badge">${accuracy}%</span>
             </div>
 
             <div class="result-score">
                 <strong>${accuracy}%</strong>
-                <span>${score === total ? "만점입니다! 축하합니다." : getScoreFeedback(accuracy)}</span>
             </div>
 
             <div class="metric-row">
@@ -1322,7 +1329,7 @@ function showResults() {
             </div>
 
             <p class="result-summary-note">
-                ${score === total ? "완벽합니다. 선택한 범위의 핵심 개념을 잘 이해했습니다." : "틀린 문제를 중심으로 약점을 보완하면 더 안정적인 이해가 가능합니다."}
+                ${score === total ? "완벽합니다. 선택한 범위의 핵심 개념을 잘 이해했습니다." : getScoreFeedback(accuracy)}
             </p>
         </div>`;
 
@@ -1343,45 +1350,9 @@ function showResults() {
         ? `이번 퀴즈에 출제되지 않은 카테고리: ${absentCategoryNames.join(", ")}`
         : "";
 
-    resultBadge.textContent = `${accuracy}%`;
-
-    if (score === total) {
-        feedbackMessage.hidden = true;
-        feedbackMessage.textContent = "";
-        feedbackMessage.className = "feedback-box";
-    } else {
-        let weakestCategories = [];
-        let lowestRate = 101;
-        const reliableMinimum = 2;
-        const eligibleStats = Object.entries(stats)
-            .filter(([, value]) => value.total >= reliableMinimum);
-        const targetStats = eligibleStats.length > 0
-            ? eligibleStats
-            : Object.entries(stats).filter(([, value]) => value.total > 0);
-
-        targetStats.forEach(([key, value]) => {
-            const rate = (value.correct / value.total) * 100;
-
-            if (rate < lowestRate) {
-                lowestRate = rate;
-                weakestCategories = [key];
-            } else if (rate === lowestRate) {
-                weakestCategories.push(key);
-            }
-        });
-
-        const weakText = weakestCategories.length > 0
-            ? weakestCategories.join(", ")
-            : "특정 분야";
-        const sampleNote = eligibleStats.length > 0
-            ? ""
-            : " 다만 카테고리별 문제 수가 적어 약점 분야는 참고용으로만 보세요.";
-
-        feedbackMessage.textContent =
-            `${getScoreFeedback(accuracy)} 틀린 문제가 있어 ${weakText} 분야를 한 번 더 확인하면 좋습니다.${sampleNote}`;
-        feedbackMessage.className = "feedback-box warning";
-        feedbackMessage.hidden = false;
-    }
+    feedbackMessage.hidden = true;
+    feedbackMessage.textContent = "";
+    feedbackMessage.className = "feedback-box";
 
     drawChart(categoryData);
 
@@ -1467,6 +1438,24 @@ function getRecordElements(prefix = "") {
     };
 }
 
+function clearRecordResults(prefix = "") {
+    const { statusMessage, recordContainer, recordStats, recordHistory } = getRecordElements(prefix);
+
+    if (recordStats) {
+        recordStats.innerHTML = "";
+    }
+
+    if (recordHistory) {
+        recordHistory.innerHTML = "";
+    }
+
+    if (recordContainer) {
+        recordContainer.hidden = true;
+    }
+
+    hideStatusMessage(statusMessage);
+}
+
 function parseUtcDate(value) {
     if (!value) {
         return null;
@@ -1531,13 +1520,26 @@ function renderRecordResults(recordStats, recordHistory, stats, records) {
                 </div>
                 <div class="category-grid">
                     ${Array.isArray(stats.category_stats) ? stats.category_stats.map(category => `
-                        <div class="category-card">
+                        <div class="record-category-card">
                             <p class="category-card-title">${category.category}</p>
-                            <p class="category-card-meta">${category.attempts}회 · 정확도 ${category.accuracy}%</p>
-                            <span>평균 점수</span>
-                            <strong>${category.average_score}</strong>
-                            <span>정답</span>
-                            <strong>${category.total_correct} / ${category.total_questions}</strong>
+                            <dl class="record-category-metrics">
+                                <div class="record-category-metric">
+                                    <dt>도전 횟수</dt>
+                                    <dd>${category.attempts}회</dd>
+                                </div>
+                                <div class="record-category-metric">
+                                    <dt>평균 점수</dt>
+                                    <dd>${category.average_score}</dd>
+                                </div>
+                                <div class="record-category-metric">
+                                    <dt>정확도</dt>
+                                    <dd>${category.accuracy}%</dd>
+                                </div>
+                                <div class="record-category-metric">
+                                    <dt>정답</dt>
+                                    <dd>${category.total_correct} / ${category.total_questions}</dd>
+                                </div>
+                            </dl>
                         </div>
                     `).join("") : ``}
                 </div>
@@ -1756,6 +1758,8 @@ function resetQuiz() {
     answerLocked = false;
     answerFeedback.hidden = true;
     nextBtn.hidden = true;
+    clearRecordResults();
+    clearRecordResults("setup");
     updateSetupMessage();
     showScreen(setupScreen);
 }

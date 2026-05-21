@@ -317,6 +317,7 @@
 
 .category-rate {
     text-align: right;
+    flex: 0 0 auto;
 }
 
 .category-rate strong {
@@ -483,42 +484,79 @@
 .category-grid {
     display: grid;
     gap: 12px;
+}
+
+.stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
 }
 
+.category-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
 .stats-card,
-.category-card {
+.record-category-card {
     padding: 14px;
     border-radius: 14px;
     background: #f8fafc;
     border: 1px solid #e5e7eb;
 }
 
-.stats-card span,
-.category-card span {
+.stats-card span {
     display: block;
     color: #6b7280;
     font-size: 12px;
     margin-bottom: 6px;
 }
 
-.stats-card strong,
-.category-card strong {
+.stats-card strong {
     display: block;
     font-size: 18px;
     color: #111827;
 }
 
 .category-card-title {
+    font-size: 17px;
     font-weight: 800;
     color: #111827;
-    margin-bottom: 6px;
+    margin-bottom: 14px;
 }
 
 .category-card-meta {
     color: #6b7280;
     font-size: 12px;
     margin-bottom: 12px;
+}
+
+.record-category-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+}
+
+.record-category-metric {
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: white;
+}
+
+.record-category-metrics dt {
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    white-space: nowrap;
+}
+
+.record-category-metrics dd {
+    margin: 0;
+    color: #111827;
+    font-size: 16px;
+    font-weight: 900;
+    white-space: nowrap;
 }
 
 
@@ -569,6 +607,10 @@ canvas {
     .topbar {
         flex-wrap: wrap;
     }
+
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 650px) {
@@ -579,5 +621,25 @@ canvas {
     .button-row {
         justify-content: center;
     }
-}
 
+    .category-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .category-rate {
+        text-align: left;
+    }
+
+    .record-card-header,
+    .record-stats-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .record-card-grid,
+    .stats-grid,
+    .record-category-metrics {
+        grid-template-columns: 1fr;
+    }
+}

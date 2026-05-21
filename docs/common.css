@@ -22,6 +22,7 @@ body {
     display: flex;
     gap: 16px;
     margin-bottom: 34px;
+    flex-wrap: wrap;
 }
 
 .topbar {
@@ -29,7 +30,7 @@ body {
 }
 
 .top-nav {
-    justify-content: flex-end;
+    align-items: center;
 }
 
 .topbar a,
@@ -39,9 +40,6 @@ body {
     color: #444;
     text-decoration: none;
     font-weight: 800;
-}
-
-.top-nav a {
     padding: 8px 12px;
     border-radius: 999px;
 }
@@ -51,9 +49,6 @@ body {
 .back-link:hover,
 .nav-link:hover {
     color: #3182f6;
-}
-
-.top-nav a:hover {
     background-color: #e8f1ff;
 }
 
@@ -213,4 +208,3 @@ textarea:focus {
         flex-wrap: wrap;
     }
 }
-

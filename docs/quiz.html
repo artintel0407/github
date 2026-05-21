@@ -12,15 +12,17 @@
 </head>
 <body>
     <main class="page">
-        <header class="topbar">
+        <header class="topbar" aria-label="주요 메뉴">
             <a href="index.html">Home</a>
-            <a href="stl.html">STL Hub</a>
+            <a href="theory.html">Basic Theory</a>
+            <a href="stl.html">STL Visualizer</a>
+            <a href="visualizer.html">Visualizer</a>
             <a href="adt-visualizer.html">Code Visualizer</a>
         </header>
 
         <section class="hero">
             <p class="eyebrow">Data Structure Quiz</p>
-            <h1>자료구조 퀴즈</h1>
+            <h1>Quiz</h1>
             <p>난이도, 문항 수, 자료구조 범위를 선택하고 지금 이해도를 점검하세요.</p>
         </section>
 
@@ -28,7 +30,7 @@
             <div class="panel-header">
                 <div>
                     <p class="panel-label">Quiz Setup</p>
-                    <h2>출제 조건 선택</h2>
+                    <h2>Quiz Setup</h2>
                 </div>
                 <span class="step-badge">Ready</span>
             </div>
@@ -128,7 +130,7 @@
                     <p class="panel-label">Result</p>
                     <h2>Quiz Result</h2>
                 </div>
-                <span class="step-badge" id="resultBadge">Done</span>
+                <span class="step-badge" id="resultBadge" hidden>Done</span>
             </div>
 
             <div id="resultSummary" class="result-summary"></div>
