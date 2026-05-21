@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\ADT_VISUALIZER_MODEL\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(code --command workbench.action.resetViewLocations)",
+      "Bash(mkdir \"C:\\\\ADT_VISUALIZER_MODEL\\\\backup\")",
+      "Bash(copy \"C:\\\\ADT_VISUALIZER_MODEL\\\\backend\\\\main.py\" \"C:\\\\ADT_VISUALIZER_MODEL\\\\backup\\\\main.py\")",
+      "Bash(copy \"C:\\\\ADT_VISUALIZER_MODEL\\\\backend\\\\requirements.txt\" \"C:\\\\ADT_VISUALIZER_MODEL\\\\backup\\\\requirements.txt\")",
+      "Bash(git pull *)",
+      "Bash(python -c \"import fastapi; print\\(fastapi.__file__\\)\")",
+      "Bash(python -c \"import sys; print\\(sys.executable\\)\")"
+    ]
+  }
+}
