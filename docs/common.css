@@ -39,7 +39,9 @@ body {
 .nav-link {
     color: #444;
     text-decoration: none;
+    font-size: 15px;
     font-weight: 800;
+    line-height: 1.2;
     padding: 8px 12px;
     border-radius: 999px;
 }

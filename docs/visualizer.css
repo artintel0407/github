@@ -1,8 +1,3 @@
-.back-link,
-.nav-link {
-    font-weight: 700;
-}
-
 .layout {
     display: grid;
     grid-template-columns: 230px 1fr;
