@@ -141,6 +141,18 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 ---
 
+## 배포 및 운영 주의사항
+
+- Render 배포 환경에서는 `DATABASE_URL` 환경변수에 PostgreSQL 연결 정보를 설정해야 합니다.
+- Render Web Service의 실행 명령은 `uvicorn main:app --host 0.0.0.0 --port $PORT` 형식을 사용합니다.
+- Render Free Web Service는 일정 시간 요청이 없으면 sleep 상태가 될 수 있어 첫 요청 응답이 지연될 수 있습니다.
+- Render Free PostgreSQL은 생성 후 30일이 지나면 만료됩니다. 만료된 Free DB는 유료 인스턴스로 업그레이드하지 않는 한 접근할 수 없으며, 장기 운영 시에는 유료 PostgreSQL 또는 별도 영구 DB 전환이 필요합니다.
+- 관련 정책은 Render 공식 문서의 Free Postgres 제한 사항에서 확인할 수 있습니다: https://render.com/docs/free#free-postgres
+- 제출 전 배포 검증 과정에서 만료된 기존 Free PostgreSQL 대신 신규 Free PostgreSQL을 생성하고 `DATABASE_URL`을 갱신해 백엔드 서비스를 복구했습니다.
+- 삭제 API는 개발/관리 목적이며, `ENABLE_DELETE=true`를 명시하지 않으면 기본적으로 `403 Forbidden`을 반환합니다.
+
+---
+
 ## API 요약
 
 | Method | Endpoint | 설명 |
@@ -170,10 +182,14 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 제출 전 마무리 단계에서 다음 항목을 중심으로 정리했습니다.
 
+- 2026-06-25 기준 로컬 및 Render 배포 백엔드 최종 동작 확인
 - 프론트엔드 배포 경로를 GitHub Pages 기준으로 정리
 - 백엔드 배포 경로와 API 문서 주소 명시
 - 퀴즈 결과 저장, 닉네임 기반 조회, 카테고리별 통계 기능을 현재 구현 기준으로 문서화
 - PostgreSQL 기반 배포 환경과 SQLite 로컬 fallback 구조 설명
+- Render Free PostgreSQL 30일 만료 제한과 장기 운영 시 영구 DB 전환 필요성 명시
+- 삭제 API가 기본적으로 비활성화되어 있음을 확인
+- `created_at` 응답 형식이 프론트엔드 KST 표시 로직과 호환됨을 확인
 - 실제 구현되지 않은 기능은 주요 기능에서 제외하고 향후 개선 방향으로 분리
 - 깨진 문자와 오래된 설명을 정리해 제출/발표용 README 형식으로 개선
 

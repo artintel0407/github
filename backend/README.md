@@ -117,11 +117,39 @@ http://127.0.0.1:8000/docs
 
 ## Render 배포 테스트
 
-1. Render 서비스의 환경 변수에 `DATABASE_URL`을 추가합니다.
-2. 배포를 실행하면 `DATABASE_URL`이 감지되어 PostgreSQL을 사용합니다.
-3. `GET /api/ping`, `POST /api/quiz-results`, `GET /api/quiz-results`, `GET /api/quiz-results?nickname=...`, `GET /api/quiz-stats?nickname=...`, `DELETE /api/quiz-results/{result_id}`가 기존대로 동작하는지 확인합니다.
+1. Render Web Service의 환경 변수에 `DATABASE_URL`을 추가합니다.
+2. Render Web Service의 start command는 다음 형식을 사용합니다.
+
+```bash
+uvicorn main:app --host 0.0.0.0 --port $PORT
+```
+
+3. 배포를 실행하면 `DATABASE_URL`이 감지되어 PostgreSQL을 사용합니다.
+4. `GET /api/ping`, `POST /api/quiz-results`, `GET /api/quiz-results`, `GET /api/quiz-results?nickname=...`, `GET /api/quiz-stats?nickname=...`, `DELETE /api/quiz-results/{result_id}`가 기존대로 동작하는지 확인합니다.
 
 Render에서 삭제 기능을 테스트하려면 `ENABLE_DELETE=true` 환경변수를 추가해야 합니다.
-```
+기본 상태에서는 `ENABLE_DELETE`를 설정하지 않으므로 삭제 요청은 `403 Forbidden`을 반환해야 정상입니다.
+
+### Render Free PostgreSQL 주의사항
+
+Render Free PostgreSQL은 생성 후 30일이 지나면 만료됩니다. 만료된 Free DB는 유료 인스턴스로 업그레이드하지 않는 한 접근할 수 없으므로, 제출/시연 이후 장기 운영이 필요하면 유료 PostgreSQL 또는 별도 영구 DB로 전환해야 합니다.
+
+관련 정책은 Render 공식 문서의 Free Postgres 제한 사항에서 확인할 수 있습니다: https://render.com/docs/free#free-postgres
+
+제출 전 배포 점검에서는 만료된 기존 Free PostgreSQL 대신 신규 Free PostgreSQL을 생성하고, Web Service의 `DATABASE_URL`을 새 DB의 Internal Database URL로 갱신했습니다.
+
+## 최종 점검 결과
+
+2026-06-25 기준으로 다음 항목을 확인했습니다.
+
+- 로컬 FastAPI 실행 정상
+- 로컬 SQLite fallback 정상
+- Render PostgreSQL 연결 정상
+- `GET /api/ping` 정상
+- `POST /api/quiz-results` 저장 정상
+- `GET /api/quiz-results?nickname=...` 조회 정상
+- `GET /api/quiz-stats?nickname=...` 통계 정상
+- `DELETE /api/quiz-results/{result_id}` 기본 비활성화 `403 Forbidden` 정상
+- `created_at` 응답 형식이 프론트엔드 KST 표시 로직과 호환
 
 Swagger UI에서 GET /api/quiz-results 엔드포인트를 펼치면 nickname 쿼리 파라미터 입력칸이 표시됩니다.
